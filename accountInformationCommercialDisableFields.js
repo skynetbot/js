@@ -43,6 +43,7 @@ function affiliationStatus() {
         $('#new_religiousordersubtype_c').parent().hide();
         affiliationProtestantField.setRequiredLevel("optional");
         affiliationDioceseField.setRequiredLevel("optional");
+        affiliationProtestantField.setDisabled(true);
         affiliationDioceseField.setDisabled(true);
     } else if (affiliationValue == 100000000) { //'Catholic'
         $('#new_protestanttype_c').parent().hide();

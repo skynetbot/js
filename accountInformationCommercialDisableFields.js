@@ -68,3 +68,6 @@ function affiliationStatus() {
         affiliationDioceseField.setDisabled(true);
     }
 }
+function test() {
+	
+}

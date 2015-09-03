@@ -69,5 +69,5 @@ function affiliationStatus() {
     }
 }
 function test() {
-	
+	var test = x + y;
 }

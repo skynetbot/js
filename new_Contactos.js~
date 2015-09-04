@@ -1,0 +1,15 @@
+
+function Onload() {
+	var a=Xrm.Page.getAttribute("new_contactnumber").getValue();if(a!=null) {
+	a=a.replace(",","");a=a.replace(",","");}
+Xrm.Page.getAttribute("new_codigocontacto").setValue(a);}
+function OnTypeContactChange() {
+	var Contacttype=Xrm.Page.getAttribute("new_contacttype");if(Contacttype.getValue()==100000021) {
+	Xrm.Page.ui.tabs.get("general").sections.get("general_section_5").setVisible(true);}
+else{Xrm.Page.ui.tabs.get("general").sections.get("general_section_5").setVisible(false);}
+if(Contacttype.getValue()==100000000) {
+	Xrm.Page.ui.tabs.get("general").sections.get("general_section_6").setVisible(true);}
+else{Xrm.Page.ui.tabs.get("general").sections.get("general_section_6").setVisible(false);}
+if(Contacttype.getValue()==100000002) {
+	Xrm.Page.ui.tabs.get("general").sections.get("general_section_7").setVisible(true);}
+else{Xrm.Page.ui.tabs.get("general").sections.get("general_section_7").setVisible(false);}}

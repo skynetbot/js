@@ -6,7 +6,7 @@ function schoolTypeStatus() {
         $('#new_schoolcode_c').parent().show();
         schoolCodeField.setDisabled(false);
         schoolCodeField.setRequiredLevel("required");
-    } else { //Private/Null
+    } else { //Private||Null
         $('#new_schoolcode_c').parent().hide();
         schoolCodeField.setRequiredLevel("optional");
         schoolCodeField.setDisabled(true);
@@ -33,7 +33,7 @@ function agreementStatus() {
         agreementNumberField.setDisabled(true);
     }
 }
-function affiliationStatus() {
+function affiliationStatusOld() {
     var affiliationTextValue = Xrm.Page.data.entity.attributes.get("new_affiliation").getText();
     var affiliationValue = Xrm.Page.data.entity.attributes.get("new_affiliation").getValue();
     var affiliationDioceseField = Xrm.Page.ui.controls.get("new_religiousordersubtype");
@@ -66,5 +66,45 @@ function affiliationStatus() {
         affiliationDioceseField.setRequiredLevel("optional");
         affiliationProtestantField.setDisabled(true);
         affiliationDioceseField.setDisabled(true);
+    }
+}
+function affiliationStatus() {
+    var affiliationTextValue = Xrm.Page.data.entity.attributes.get("new_affiliation").getText();
+    var affiliationValue = Xrm.Page.data.entity.attributes.get("new_affiliation").getValue();
+    var catholicField = Xrm.Page.ui.controls.get("new_catholicaffiliation");
+    var protestantField = Xrm.Page.ui.controls.get("new_protestantaffiliation");
+    function hideProtestant() {
+        protestantField.setRequiredLevel("optional");
+        protestantField.setDisabled(true);
+        $('#new_protestantaffiliation_c').parent().hide();}
+    function hideCatholic() {
+        catholicField.setRequiredLevel("optional");
+        catholicField.setDisabled(true);
+        $('#new_catholicaffiliation_c').parent().hide();}
+    function showProtestant() {
+        $('#new_protestantaffiliation_c').parent().show();
+        protestantField.setDisabled(false);
+        protestantField.setRequiredLevel("required");}
+    function showCatholic() {
+        $('#new_catholicaffiliation_c').parent().show();
+        catholicField.setDisabled(false);
+        catholicField.setRequiredLevel("required");}
+    switch (affiliationValue) {
+        case 100000000 : //'Catholic'
+            hideProtestant();
+            showCatholic();
+            break;
+        case 100000001 : //'Protestant'
+            hideCatholic();
+            showProtestant();
+            break;
+        case 100000002 : //'Secular'
+            hideCatholic();
+            hideProtestant();
+            break;
+        default:
+            hideCatholic();
+            hideProtestant();
+            break;
     }
 }

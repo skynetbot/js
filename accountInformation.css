@@ -1,0 +1,29 @@
+@import url(https://fonts.googleapis.com/css?family=Merriweather);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+html, body { margin: 0; padding: 0; }
+html {
+	font-size: 1em;
+}
+body {
+    color: #474747;
+    max-width: 83em;
+    margin: 0 auto;
+    text-rendering: optimizelegibility;
+}
+h1 {
+  margin: 0;
+  font-size: 3em;
+  /* background-color: #424242; */
+  padding-bottom: 1em;
+  padding-top: 1em;
+  /* color: #fff; */
+}
+#crmFormTabContainer {
+    font-family: 'Open Sans', sans-serif;
+/*    font-family: 'Merriweather', serif;*/
+    font-size: 1em;
+/*    background-color: #FCFCFC;*/
+}
+.ms-crm-Inline-Value.ms-crm-Inline-EditHintState div.ms-crm-Inline-GradientMask {
+    background: #FAFAFA;
+}

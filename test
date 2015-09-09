@@ -1,0 +1,1 @@
+tar -czpf /adm/adm.tar.gz --directory=/ --attrs --exclude=proc --exclude=sys --exclude=dev/pts --exclude=adm .

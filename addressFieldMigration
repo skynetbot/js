@@ -1,0 +1,24 @@
+address1_line1
+address1_city
+address1_stateorprovince
+address1_postalcode
+
+mail
+address2_line1
+address2_city
+address2_stateorprovince
+address2_postalcode
+
+2 address physical
+new_locationstreetline1
+new_locationstreetline2
+new_locationcity
+new_locationstate
+new_locatonzipcode
+
+mail
+new_mailstreetline1
+new_mailstreetline2
+new_mailcity
+new_mailcountry
+new_mailzipcode

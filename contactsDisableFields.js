@@ -58,5 +58,5 @@ function contactTypeOnChange() {
 }
 function getAccountName() {
     var accountNameText = Xrm.Page.getAttribute("parentcustomerid").getValue();
-    alert(accountNameText);
+    alert(accountNameText[0].name);
 }

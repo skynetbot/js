@@ -90,15 +90,15 @@ function affiliationStatus() {
         catholicField.setDisabled(false);
         catholicField.setRequiredLevel("required");}
     switch (affiliationValue) {
-        case 100000000 : //'Catholic'
+        case 100000000: //'Catholic'
             hideProtestant();
             showCatholic();
             break;
-        case 100000001 : //'Protestant'
+        case 100000001: //'Protestant'
             hideCatholic();
             showProtestant();
             break;
-        case 100000002 : //'Secular'
+        case 100000002: //'Secular'
             hideCatholic();
             hideProtestant();
             break;

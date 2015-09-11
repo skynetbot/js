@@ -56,3 +56,7 @@ function contactTypeOnChange() {
             break;
     }
 }
+function getAccountName() {
+    var accountNameText = Xrm.Page.getAttribute("parentcustomerid").getValue();
+    alert(accountNameText);
+}

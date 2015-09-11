@@ -8,7 +8,7 @@ function schoolTypeStatus() {
         schoolCodeField.setRequiredLevel("required");
     } else { //Private||Null
         $('#new_schoolcode_c').parent().hide();
-        schoolCodeField.setRequiredLevel("optional");
+        schoolCodeField.setRequiredLevel("none");
         schoolCodeField.setDisabled(true);
     }
 }
@@ -27,8 +27,8 @@ function agreementStatus() {
     } else { //'No'
         $('#new_agreementexpirationdate_c').parent().hide();
         $('#new_contractid_c').parent().hide();
-        agreementDueDateField.setRequiredLevel("optional");
-        agreementNumberField.setRequiredLevel("optional");
+        agreementDueDateField.setRequiredLevel("none");
+        agreementNumberField.setRequiredLevel("none");
         agreementDueDateField.setDisabled(true);
         agreementNumberField.setDisabled(true);
     }
@@ -41,14 +41,14 @@ function affiliationStatusOld() {
     if (affiliationValue == 100000002) { //'Secular'
         $('#new_protestanttype_c').parent().hide();
         $('#new_religiousordersubtype_c').parent().hide();
-        affiliationProtestantField.setRequiredLevel("optional");
-        affiliationDioceseField.setRequiredLevel("optional");
+        affiliationProtestantField.setRequiredLevel("none");
+        affiliationDioceseField.setRequiredLevel("none");
         affiliationProtestantField.setDisabled(true);
         affiliationDioceseField.setDisabled(true);
     } else if (affiliationValue == 100000000) { //'Catholic'
         $('#new_protestanttype_c').parent().hide();
         $('#new_religiousordersubtype_c').parent().show();
-        affiliationProtestantField.setRequiredLevel("optional");
+        affiliationProtestantField.setRequiredLevel("none");
         affiliationDioceseField.setDisabled(false);
         affiliationDioceseField.setRequiredLevel("required");
         affiliationProtestantField.setDisabled(true);
@@ -56,14 +56,14 @@ function affiliationStatusOld() {
         $('#new_protestanttype_c').parent().show();
         $('#new_religiousordersubtype_c').parent().hide();
         affiliationProtestantField.setDisabled(false);
-        affiliationDioceseField.setRequiredLevel("optional");
+        affiliationDioceseField.setRequiredLevel("none");
         affiliationDioceseField.setDisabled(true);
         affiliationProtestantField.setRequiredLevel("required");
     } else {
         $('#new_protestanttype_c').parent().hide();
         $('#new_religiousordersubtype_c').parent().hide();
-        affiliationProtestantField.setRequiredLevel("optional");
-        affiliationDioceseField.setRequiredLevel("optional");
+        affiliationProtestantField.setRequiredLevel("none");
+        affiliationDioceseField.setRequiredLevel("none");
         affiliationProtestantField.setDisabled(true);
         affiliationDioceseField.setDisabled(true);
     }
@@ -74,11 +74,11 @@ function affiliationStatus() {
     var catholicField = Xrm.Page.ui.controls.get("new_catholicaffiliation");
     var protestantField = Xrm.Page.ui.controls.get("new_protestantaffiliation");
     function hideProtestant() {
-        protestantField.setRequiredLevel("optional");
+        protestantField.setRequiredLevel("none");
         protestantField.setDisabled(true);
         $('#new_protestantaffiliation_c').parent().hide();}
     function hideCatholic() {
-        catholicField.setRequiredLevel("optional");
+        catholicField.setRequiredLevel("none");
         catholicField.setDisabled(true);
         $('#new_catholicaffiliation_c').parent().hide();}
     function showProtestant() {

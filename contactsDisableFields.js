@@ -42,16 +42,16 @@ function contactTypeOnChange() {
         section7.setVisible(false);
     }
     switch (contactTypeValue) {
-        case 100000021 : //Student
+        case 100000021: //Student
             sectionShow(section5, section6, section7);
             break;
-        case 100000000 : //Teacher
+        case 100000000: //Teacher
             sectionShow(section6, section5, section7);
             break;
-        case 100000002 : //Coach
+        case 100000002: //Coach
             sectionShow(section7, section5, section6);
             break;
-        case default :
+        default:
             sectionHide();
             break;
     }

@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Merriweather);
+/* @import url(https://fonts.googleapis.com/css?family=Merriweather); */
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 html, body { margin: 0; padding: 0; }
 html {
@@ -22,7 +22,7 @@ h1 {
     font-family: 'Open Sans', sans-serif;
 /*    font-family: 'Merriweather', serif;*/
     font-size: 1em;
-/*    background-color: #FCFCFC;*/
+    background-color: #FCFCFC;
 }
 .ms-crm-Inline-Value.ms-crm-Inline-EditHintState div.ms-crm-Inline-GradientMask {
     background: #FAFAFA;

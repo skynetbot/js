@@ -17,11 +17,8 @@ function getAccountDetails() {
             beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
             success: function (data, textStatus, XmlHttpRequest) {
                 var resultContact = data.d;
-                console.log(data.d);
-                alert(Xrm.Page.context.getQueryStringParameters()[0]);
-                alert("Milton Reyes this: " + data.d.new_SubType.Value);
-                //alert(resultContact[0]);
-                //alert(ownerid);
+                console.log(Xrm.Page.context.getQueryStringParameters());
+                //alert("Milton Reyes this: " + data.d.new_SubType.Value);
                 //var mcCity1 = resultContact.Address1_City;
                 //replace the fields with the fields on your entity
                 //Xrm.Page.getAttribute("").setValue(mcCity1);

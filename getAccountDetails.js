@@ -16,8 +16,9 @@ function getAccountDetails() {
             url: odataSelect,
             beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
             success: function (data, textStatus, XmlHttpRequest) {
-                var resultContact = data.d;
+                var resultContact = JSON.parse(XmlHttpRequest.responseText).d;
                 console.log(Xrm.Page.context.getQueryStringParameters());
+                alert(resultContact.new_SubType.Value);
                 //alert("Milton Reyes this: " + data.d.new_SubType.Value);
                 //var mcCity1 = resultContact.Address1_City;
                 //replace the fields with the fields on your entity

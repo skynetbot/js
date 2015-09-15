@@ -16,9 +16,26 @@ function getAccountDetails() {
             url: odataSelect,
             beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
             success: function (data, textStatus, XmlHttpRequest) {
-                var resultContact = JSON.parse(XmlHttpRequest.responseText).d;
-                console.log(Xrm.Page.context.getQueryStringParameters());
-                alert(resultContact.new_SubType.Value);
+                var obj = JSON.parse(XmlHttpRequest.responseText).d;
+                if (obj.new_SubType.Value == 100000000) { // Private
+                    $('#new_contacttypeprivate_c').parent().show();
+                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(false);
+                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setRequiredLevel("required");
+                } else if (obj.new_SubType.Value == 100000001) { // Public
+                    $('#new_contacttypeprivate_c').parent().hide();
+                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(true);
+                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setRequiredLevel("none");
+                } else {
+                    $('#new_contacttypeprivate_c').parent().hide();
+                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(true);
+                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setRequiredLevel("none");
+                }
+                
+                
+                
+                
+                //console.log(Xrm.Page.context.getQueryStringParameters());
+                //alert(resultContact.new_SubType.Value);
                 //alert("Milton Reyes this: " + data.d.new_SubType.Value);
                 //var mcCity1 = resultContact.Address1_City;
                 //replace the fields with the fields on your entity

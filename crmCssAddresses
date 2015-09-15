@@ -1,0 +1,4 @@
+getClientUrl /_forms/controls/control.css.aspx?lcid=1033&ver=843050181:2262
+.ms-crm-Inline-Value.ms-crm-Inline-EditHintState div.ms-crm-Inline-GradientMask {
+    background: transparent -moz-linear-gradient(right center , #F3F1F1 25%, rgba(243, 241, 241, 0) 100%) repeat scroll 0% 0%;
+}

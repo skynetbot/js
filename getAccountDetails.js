@@ -21,14 +21,23 @@ function getAccountDetails() {
                     $('#new_contacttypeprivate_c').parent().show();
                     Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(false);
                     Xrm.Page.ui.controls.get("new_contacttypeprivate").setRequiredLevel("required");
+                    $('#new_contacttypepublic_c').parent().hide();
+                    Xrm.Page.ui.controls.get("new_contacttypepublic").setRequiredLevel("none");
+                    Xrm.Page.ui.controls.get("new_contacttypepublic").setDisabled(true);
                 } else if (obj.new_SubType.Value == 100000001) { // Public
+                    $('#new_contacttypepublic_c').parent().show();
+                    Xrm.Page.ui.controls.get("new_contacttypepublic").setDisabled(false);
+                    Xrm.Page.ui.controls.get("new_contacttypepublic").setRequiredLevel("required");
                     $('#new_contacttypeprivate_c').parent().hide();
-                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(true);
                     Xrm.Page.ui.controls.get("new_contacttypeprivate").setRequiredLevel("none");
+                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(true);
                 } else {
+                    $('#new_contacttypepublic_c').parent().hide();
+                    Xrm.Page.ui.controls.get("new_contacttypepublic").setRequiredLevel("none");
+                    Xrm.Page.ui.controls.get("new_contacttypepublic").setDisabled(true);
                     $('#new_contacttypeprivate_c').parent().hide();
-                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(true);
                     Xrm.Page.ui.controls.get("new_contacttypeprivate").setRequiredLevel("none");
+                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(true);
                 }
                 
                 

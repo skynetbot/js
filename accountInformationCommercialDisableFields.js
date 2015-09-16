@@ -76,14 +76,19 @@ function affiliationStatus() { //Shows/Hides fields depending on affiliation sta
     var affiliationValue = Xrm.Page.data.entity.attributes.get("new_affiliation").getValue();
     var catholicField = Xrm.Page.ui.controls.get("new_catholicaffiliation");
     var protestantField = Xrm.Page.ui.controls.get("new_protestantaffiliation");
+    var consortiumField = Xrm.Page.ui.controls.get("new_consortium");
     function hideProtestant() { //function to hide protestant affiliation fields
         protestantField.setRequiredLevel("none");
         protestantField.setDisabled(true);
         $('#new_protestantaffiliation_c').parent().hide();}
     function hideCatholic() { //hides catholic affiliation fields
         catholicField.setRequiredLevel("none");
+        consortiumField.setRequiredLevel("none");
         catholicField.setDisabled(true);
-        $('#new_catholicaffiliation_c').parent().hide();}
+        consortiumField.setDisabled(true);
+        $('#new_catholicaffiliation_c').parent().hide();
+        $('#new_consortium_c').parent().hide();
+    }
     function showProtestant() { 
         //displays protestant affiliation fields and sets them as required
         $('#new_protestantaffiliation_c').parent().show();
@@ -92,8 +97,11 @@ function affiliationStatus() { //Shows/Hides fields depending on affiliation sta
     function showCatholic() {
         // Displays catholic affiliation fields
         $('#new_catholicaffiliation_c').parent().show();
+        $('#new_consortium_c').parent().show();
         catholicField.setDisabled(false);
-        catholicField.setRequiredLevel("required");}
+        consortiumField.setDisabled(false);
+        catholicField.setRequiredLevel("required");
+        consortiumField.setRequiredLevel("required");}
     switch (affiliationValue) { // Depending on affiliation field
             // makes funciton calls
         case 100000000: //'Catholic'

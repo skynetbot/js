@@ -35,37 +35,34 @@ function contactTypeOnChange() {
     var teacherSection = Xrm.Page.ui.tabs.get("general").sections.get("teacher_section");
     // Coach section
     var coachSection = Xrm.Page.ui.tabs.get("general").sections.get("coach_section");
-    function sectionShow(show) { 
+    function sectionShow(show) {
         // Shows a section while hiding the other two
         show.setVisible(true);
     }
-    function sectionHide(hide) { //Hides all sections
-        hide.setVisible(false);
+    function sectionHide() { //Hides all sections
+        for (var i = 0; i < arguments.length; i++) {
+            arguments[i].setVisible(false);
+        }
     }
     switch (contactTypeValue) {
         case 100000021: //Student
             //If the contact type is a student, 
             //display the student section hide not relevant
             sectionShow(studentSection);
-            sectionHide(teacherSection);
-            sectionHide(coachSection);
+            sectionHide(teacherSection, coachSection);
             break;
         case 100000000: //Teacher
             //If a teacher display teacher section, hide not relevant
             sectionShow(teacherSection);
-            sectionHide(studentSection);
-            sectionHide(coachSection);
+            sectionHide(studentSection, coachSection);
             break;
         case 100000002: //Coach
             //if a coach, show coach section, hide not relevant
             sectionShow(coachSection);
-            sectionHide(studentSection);
-            sectionHide(teacherSection);
+            sectionHide(studentSection, teacherSection);
             break;
         default: //default action should hide all sections
-            sectionHide(studentSection);
-            sectionHide(teacherSection);
-            sectionHide(coachSection);
+            sectionHide(studentSection, teacherSection, coachSection);
             break;
     }
 }

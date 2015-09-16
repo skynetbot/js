@@ -29,36 +29,43 @@ function OnTypeContactChange() {
 }
 function contactTypeOnChange() {
     var contactTypeValue = Xrm.Page.getAttribute("new_contacttype").getValue();
-    var section5 = Xrm.Page.ui.tabs.get("general").sections.get("general_section_5");
-    var section6 = Xrm.Page.ui.tabs.get("general").sections.get("general_section_6");
-    var section7 = Xrm.Page.ui.tabs.get("general").sections.get("general_section_7");
-    function sectionShow(show, hide, hide2) { 
+    // Student section
+    var studentSection = Xrm.Page.ui.tabs.get("general").sections.get("student_section");
+    // Teacher section
+    var teacherSection = Xrm.Page.ui.tabs.get("general").sections.get("teacher_section");
+    // Coach section
+    var coachSection = Xrm.Page.ui.tabs.get("general").sections.get("coach_section");
+    function sectionShow(show) { 
         // Shows a section while hiding the other two
         show.setVisible(true);
-        hide.setVisible(false);
-        hide2.setVisible(false);
     }
-    function sectionHide() { //Hides all sections
-        section5.setVisible(false);
-        section6.setVisible(false);
-        section7.setVisible(false);
+    function sectionHide(hide) { //Hides all sections
+        hide.setVisible(false);
     }
     switch (contactTypeValue) {
         case 100000021: //Student
             //If the contact type is a student, 
             //display the student section hide not relevant
-            sectionShow(section5, section6, section7);
+            sectionShow(studentSection);
+            sectionHide(teacherSection);
+            sectionHide(coachSection);
             break;
         case 100000000: //Teacher
             //If a teacher display teacher section, hide not relevant
-            sectionShow(section6, section5, section7);
+            sectionShow(teacherSection);
+            sectionHide(studentSection);
+            sectionHide(coachSection);
             break;
         case 100000002: //Coach
             //if a coach, show coach section, hide not relevant
-            sectionShow(section7, section5, section6);
+            sectionShow(coachSection);
+            sectionHide(studentSection);
+            sectionHide(teacherSection);
             break;
         default: //default action should hide all sections
-            sectionHide();
+            sectionHide(studentSection);
+            sectionHide(teacherSection);
+            sectionHide(coachSection);
             break;
     }
 }

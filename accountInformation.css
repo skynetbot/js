@@ -41,12 +41,12 @@ h1 {
 /*    background-color: #FCFCFC; */
 }
 .ms-crm-FormSection-Container {
-    background-color: #fafafa !important;
+    /*background-color: #fafafa !important;*/
     border: 1px solid #eee !important;
     width: 80% !important;
 }
 .ms-crm-Inline-Value {
-    background-color: #fefefe !important;
+    background-color: #fafafa !important;
 }
 .ms-crm-Inline-Chrome {
     width: 100% !important;

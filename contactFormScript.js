@@ -8,8 +8,11 @@ function getAccountDetails() {
        public/private/else) then with the requested value from the account
        displays certain fields and sets it's required permission in the current
        contact form */
+    var accountObject = Xrm.Page.getAttribute('parentcustomerid').getValue();
     //if account field is not empty make request
-    if ((getAttributeValue('parentcustomerid') != null)) {
+    alert(Xrm.Page.getAttribute('parentcustomerid').getValue());
+    console.log(getAttributeValue('parentcustomerid'));
+    if ((accountObject != null)) {
         var accountObjectId = accountObject[0].id; //get account id
         var clientUrl = Xrm.Page.context.getClientUrl(); //get CRM URL
         var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc"; //Xrm OData end-point
@@ -33,6 +36,9 @@ function getAccountDetails() {
                 if (obj.new_SubType.Value == 100000000) { // Private if account is a private school
                     enableField('new_contacttypeprivate');
                     disableField('new_contacttypepublic');
+                    // console.log(getAttributeValue('new_contacttypeprivate'));
+                    // var testing = .fireOnChange();
+                    // alert(testing);
                 } else if (obj.new_SubType.Value == 100000001) { // Public if account is a public school
                     enableField('new_contacttypepublic');
                     disableField('new_contacttypeprivate');
@@ -57,11 +63,20 @@ function getAccountDetails() {
         });
     }
 }
-function contactTypeOnChange() {
-    getAttributeValue();
+function contactTypeOnChange(attribute) {
+    switch (getAttributeValue(attribute)) {
+        case 100000016:
+            break;
+        default:
+            sectionHide(getSection('general', 'teacher_section'));
+            break;
+    }
 }
-function getAttributeValue(attribute) { return Xrm.Page.getAttribute(attribute).getValue(); }
-function getSection(tab, section) { Xrm.Page.ui.tabs.get(tab).sections.get(section); }
+function getAttributeValue(attribute) { 
+    var value = Xrm.Page.getAttribute(attribute).getValue();
+    return value;
+}
+function getSection(tab, section) { return Xrm.Page.ui.tabs.get(tab).sections.get(section); }
 function enableField(field) {
     $('#' + field + '_c').parent().show(); //show <tr> field with label/input
     Xrm.Page.ui.controls.get(field).setDisabled(false);

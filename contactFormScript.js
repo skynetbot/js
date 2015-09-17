@@ -1,4 +1,4 @@
-/* Parts of this script are documented in Microsoft Dynamics CRM 2015 SDK:
+/* Refer to Microsoft Dynamics CRM 2015 SDK:
    {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
    RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js */
 function getAccountDetails() { 
@@ -8,9 +8,8 @@ function getAccountDetails() {
        public/private/else) then with the requested value from the account
        displays certain fields and sets it's required permission in the current
        contact form */
-    var accountObject = Xrm.Page.getAttribute("parentcustomerid").getValue();
     //if account field is not empty make request
-    if ((accountObject != null)) {
+    if ((getAttributeValue('parentcustomerid') != null)) {
         var accountObjectId = accountObject[0].id; //get account id
         var clientUrl = Xrm.Page.context.getClientUrl(); //get CRM URL
         var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc"; //Xrm OData end-point
@@ -32,26 +31,14 @@ function getAccountDetails() {
                 var obj = JSON.parse(XmlHttpRequest.responseText).d;
                 //on account object account school type value hide or display related fields
                 if (obj.new_SubType.Value == 100000000) { // Private if account is a private school
-                    $('#new_contacttypeprivate_c').parent().show(); //show <tr> field with label/input
-                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(false);
-                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setRequiredLevel("required"); //this field is a must
-                    $('#new_contacttypepublic_c').parent().hide(); //hide public options
-                    Xrm.Page.ui.controls.get("new_contacttypepublic").setRequiredLevel("none");
-                    Xrm.Page.ui.controls.get("new_contacttypepublic").setDisabled(true);
+                    enableField('new_contacttypeprivate');
+                    disableField('new_contacttypepublic');
                 } else if (obj.new_SubType.Value == 100000001) { // Public if account is a public school
-                    $('#new_contacttypepublic_c').parent().show(); //display <tr> field with lable/input
-                    Xrm.Page.ui.controls.get("new_contacttypepublic").setDisabled(false);
-                    Xrm.Page.ui.controls.get("new_contacttypepublic").setRequiredLevel("required"); //this field is a must
-                    $('#new_contacttypeprivate_c').parent().hide(); //hide private type fields
-                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setRequiredLevel("none");
-                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(true);
+                    enableField('new_contacttypepublic');
+                    disableField('new_contacttypeprivate');
                 } else { //if account type is not defined hide both private and public fields
-                    $('#new_contacttypepublic_c').parent().hide();
-                    Xrm.Page.ui.controls.get("new_contacttypepublic").setRequiredLevel("none");
-                    Xrm.Page.ui.controls.get("new_contacttypepublic").setDisabled(true);
-                    $('#new_contacttypeprivate_c').parent().hide();
-                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setRequiredLevel("none");
-                    Xrm.Page.ui.controls.get("new_contacttypeprivate").setDisabled(true);
+                    disableField('new_contacttypepublic');
+                    disableField('new_contacttypeprivate');
                 }
                 
                 
@@ -70,3 +57,23 @@ function getAccountDetails() {
         });
     }
 }
+function contactTypeOnChange() {
+    getAttributeValue();
+}
+function getAttributeValue(attribute) { return Xrm.Page.getAttribute(attribute).getValue(); }
+function getSection(tab, section) { Xrm.Page.ui.tabs.get(tab).sections.get(section); }
+function enableField(field) {
+    $('#' + field + '_c').parent().show(); //show <tr> field with label/input
+    Xrm.Page.ui.controls.get(field).setDisabled(false);
+    Xrm.Page.ui.controls.get(field).setRequiredLevel("required"); //this field is a must
+}
+function disableField(field) {
+    $('#' + field + '_c').parent().hide(); //hide public options
+    Xrm.Page.ui.controls.get(field).setRequiredLevel("none");
+    Xrm.Page.ui.controls.get(field).setDisabled(true);
+}
+function sectionShow(show) { show.setVisible(true); }
+function sectionHide() {
+    for (var i = 0; i < arguments.length; i++)
+        arguments[i].setVisible(false);}
+

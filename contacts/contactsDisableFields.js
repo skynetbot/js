@@ -28,13 +28,13 @@ function OnTypeContactChange() {
     }
 }
 function contactTypeOnChange() {
-    var contactTypeValue = Xrm.Page.getAttribute("new_contacttype").getValue();
+    var contactTypeValue = Xrm.Page.getAttribute("new_contacttype").getValue(),
     // Student section
-    var studentSection = Xrm.Page.ui.tabs.get("general").sections.get("student_section");
+        studentSection = Xrm.Page.ui.tabs.get("general").sections.get("student_section"),
     // Teacher section
-    var teacherSection = Xrm.Page.ui.tabs.get("general").sections.get("teacher_section");
+        teacherSection = Xrm.Page.ui.tabs.get("general").sections.get("teacher_section"),
     // Coach section
-    var coachSection = Xrm.Page.ui.tabs.get("general").sections.get("coach_section");
+        coachSection = Xrm.Page.ui.tabs.get("general").sections.get("coach_section");
     function sectionShow(show) {
         // Shows a section while hiding the other two
         show.setVisible(true);

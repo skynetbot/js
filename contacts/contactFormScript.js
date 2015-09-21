@@ -8,15 +8,14 @@ function getAccountDetails() {
        public/private/else) then with the requested value from the account
        displays certain fields and sets it's required permission in the current
        contact form */
-    var accountObject = Xrm.Page.getAttribute('parentcustomerid').getValue();
+    var accountObject = getAttributeObject('parentcustomerid').getValue(); //replaced accountObject with getAttributeValue()
+    //console.log(accountObject);
     //if account field is not empty make request
-    alert(Xrm.Page.getAttribute('parentcustomerid').getValue());
-    console.log(getAttributeValue('parentcustomerid'));
     if ((accountObject != null)) {
-        var accountObjectId = accountObject[0].id; //get account id
-        var clientUrl = Xrm.Page.context.getClientUrl(); //get CRM URL
-        var ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc"; //Xrm OData end-point
-        var odataSetName = "AccountSet"; //This is found when exporting 
+        var accountObjectId = accountObject[0].id, //get account id
+            clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
+            ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
+            odataSetName = "AccountSet"; //This is found when exporting 
         //account entity XML
         odataSetName = encodeURIComponent(odataSetName); //prevent sql injection
         accountObjectId = encodeURIComponent(accountObjectId); //prevent sql injection
@@ -42,6 +41,8 @@ function getAccountDetails() {
                 } else if (obj.new_SubType.Value == 100000001) { // Public if account is a public school
                     enableField('new_contacttypepublic');
                     disableField('new_contacttypeprivate');
+                    getAttributeObject('new_contacttypepublic').addOnChange(ohlalah);
+                    //console.log(getAttributeValue('new_contacttypepublic'));
                 } else { //if account type is not defined hide both private and public fields
                     disableField('new_contacttypepublic');
                     disableField('new_contacttypeprivate');
@@ -63,18 +64,21 @@ function getAccountDetails() {
         });
     }
 }
+function ohlalah() {
+    alert("on change!");
+}
 function contactTypeOnChange(attribute) {
-    switch (getAttributeValue(attribute)) {
-        case 100000016:
+    switch (getAttributeObject(attribute).getValue()) {
+        case 100000000:
+            alert("on change!");
             break;
         default:
             sectionHide(getSection('general', 'teacher_section'));
             break;
     }
 }
-function getAttributeValue(attribute) { 
-    var value = Xrm.Page.getAttribute(attribute).getValue();
-    return value;
+function getAttributeObject(attribute) { 
+    return Xrm.Page.getAttribute(attribute);
 }
 function getSection(tab, section) { return Xrm.Page.ui.tabs.get(tab).sections.get(section); }
 function enableField(field) {
@@ -91,4 +95,14 @@ function sectionShow(show) { show.setVisible(true); }
 function sectionHide() {
     for (var i = 0; i < arguments.length; i++)
         arguments[i].setVisible(false);}
+function changeContactNumber() { // Previously Onload() now renamed to changeContactNumber. Copied to maintian backwards compatibility.
+    // This function is probably useless since the field described here doesn't have any values
+    // in the database.
+    var a=Xrm.Page.getAttribute("new_contactnumber").getValue();
+    if(a!=null) {
+        a=a.replace(",","");
+        a=a.replace(",","");
+    }
+    Xrm.Page.getAttribute("new_codigocontacto").setValue(a);
+}
 

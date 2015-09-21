@@ -1,0 +1,83 @@
+<html><head>
+    <meta charset="utf-8">
+
+    <style type="text/css">
+        body {
+            margin: 0px;
+        }
+        .inactiveTab:hover {
+            cursor:hand;
+        }
+        .activeTab:hover {
+            cursor:hand;
+        }
+        .inactiveTab:hover {
+            background-color:#C2C2C2;
+        }
+        .inactiveTab {
+            background-color:#F3F3F3;
+            color:#000000;
+            font-family:Segoe UI, Tahoma, Arial;
+            font-size:12px;
+            padding: 5px 10px 5px 10px;
+            margin:0px 4px 0px 0px;
+            width:120px;
+            text-overflow:ellipsis;
+            display: inline-block;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .activeTab {
+            background-color:#7A7A7A;
+            color:#FFFFFF;
+            font-family:Segoe UI, Tahoma, Arial;
+            font-size:12px;
+            padding: 5px 10px 5px 10px;
+            margin:0px 4px 0px 0px;
+            width:120px;
+            text-overflow:ellipsis;
+            display: inline-block;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    </style>
+
+    <script src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script>
+        function activateTab(tab) {
+            parent.Xrm.Page.ui.tabs.get(tab).setFocus();
+            parent.Xrm.Page.ui.tabs.get(tab).setDisplayState("expanded");
+
+            var tabCtrl = document.getElementById('tabCtrl');
+            var tabToActivate = document.getElementById(tab);
+            for (var i = 0; i < tabCtrl.childNodes.length; i++) {
+                var node = tabCtrl.childNodes[i];
+                if (node.nodeType == 1) { 
+                    node.className = (node == tabToActivate) ? "activeTab" : "inactiveTab";
+                }
+            }
+        }
+    </script>
+</head>
+
+<body style="word-wrap: break-word;">
+    <div id="tabCtrl"></div>
+
+    <script>
+        var tabs = parent.Xrm.Page.ui.tabs.get();
+        for (var t in tabs) {
+            var tab = tabs[t];
+            var tabStyle = "inactiveTab";
+            if (t == 1) {
+                tabStyle = "activeTab"
+            }         
+            
+            if (t != 0) { 
+            document.getElementById("tabCtrl").innerHTML = document.getElementById("tabCtrl").innerHTML + "<span class=" + tabStyle + " id=\"" + tab.getName() + "\" onclick=\"activateTab('" + tab.getName() + "');\">" + tab.getLabel() + "</span>";
+}
+        }
+    </script>
+
+ </body></html>

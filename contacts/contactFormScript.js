@@ -1,7 +1,79 @@
+function changeContactNumber() { // Previously Onload() now renamed to changeContactNumber. Copied to maintian backwards compatibility.
+    // This function is probably useless since the field described here doesn't have any values
+    // in the database.
+    var a = Xrm.Page.getAttribute("new_contactnumber").getValue();
+    if(a != null) {
+        a = a.replace(",", "");
+        a = a.replace(",", "");
+    }
+    Xrm.Page.getAttribute("new_codigocontacto").setValue(a);
+}
+function oohlalah() {
+    alert("on change!");
+}
+function getAttributeObject(attribute) {
+    return Xrm.Page.getAttribute(attribute);
+}
+function getSection(tab, section) { return Xrm.Page.ui.tabs.get(tab).sections.get(section); }
+function enableField(field) {
+    $('#' + field + '_c').parent().show(); //show <tr> field with label/input
+    Xrm.Page.ui.controls.get(field).setDisabled(false);
+    Xrm.Page.ui.controls.get(field).setRequiredLevel("required"); //this field is a must
+}
+function disableField(field) {
+    $('#' + field + '_c').parent().hide(); //hide public options
+    Xrm.Page.ui.controls.get(field).setRequiredLevel("none");
+    Xrm.Page.ui.controls.get(field).setDisabled(true);
+}
+function sectionShow(show) { show.setVisible(true); }
+function sectionsHide() {
+    var i;
+    for (i = 0; i < arguments.length; i++)
+        arguments[i].setVisible(false); }
+function contactTypeOnChange(attribute, type) {
+    // Getting sections in the contact form
+    var studentSection = getSection('general', 'student_section'),
+        teacherSection = getSection('general', 'teacher_section'),
+        coachSection = getSection('general', 'coach_section');
+    if (type == 100000000) { // School type private from obj in accountDetails()
+        switch (getAttributeObject(attribute).getValue()) {
+            case 100000016: // Teacher
+                //If a teacher display teacher section, hide not relevant
+                sectionsHide(studentSection, coachSection);
+                sectionShow(teacherSection);
+                break;
+            default:
+                sectionsHide(studentSection, teacherSection, coachSection);
+                break;
+        }
+    }
+    if (type == 100000001) {
+        switch (getAttributeObject(attribute).getValue()) {
+            case 100000000: // Teacher
+                //If a teacher display teacher section, hide not relevant
+                sectionsHide(studentSection, coachSection);
+                sectionShow(teacherSection);
+                break;
+            case 100000021: //Student
+                //If the contact type is a student, display the student section hide not relevant
+                sectionsHide(teacherSection, coachSection);
+                sectionShow(studentSection);
+                break;
+            case 100000002: // Coach
+                // if a coach, show coach section, hide not relevant
+                sectionsHide(studentSection, teacherSection);
+                sectionShow(coachSection);
+                break;
+            default:
+                sectionsHide(studentSection, teacherSection, coachSection);
+                break;
+        }
+    }
+}
 /* Refer to Microsoft Dynamics CRM 2015 SDK:
    {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
    RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js */
-function getAccountDetails() { 
+function getAccountDetails() {
     /* This function will get the related account value from the contact form
        and with this value creates a database request to pull a specific value
        from the account entity (in this case if the account is from a 
@@ -30,79 +102,38 @@ function getAccountDetails() {
             beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
             success: function (data, textStatus, XmlHttpRequest) {
                 //when request success, get the account object
-                var obj = JSON.parse(XmlHttpRequest.responseText).d;
+                var obj = JSON.parse(XmlHttpRequest.responseText).d,
+                    objSchoolType = obj.new_SubType.Value;
+                console.log(objSchoolType);
                 //on account object account school type value hide or display related fields
-                if (obj.new_SubType.Value == 100000000) { // Private if account is a private school
-                    enableField('new_contacttypeprivate');
-                    disableField('new_contacttypepublic');
-                    // console.log(getAttributeValue('new_contacttypeprivate'));
-                    // var testing = .fireOnChange();
-                    // alert(testing);
-                } else if (obj.new_SubType.Value == 100000001) { // Public if account is a public school
-                    enableField('new_contacttypepublic');
-                    disableField('new_contacttypeprivate');
-                    getAttributeObject('new_contacttypepublic').addOnChange(ohlalah);
-                    //console.log(getAttributeValue('new_contacttypepublic'));
-                } else { //if account type is not defined hide both private and public fields
-                    disableField('new_contacttypepublic');
-                    disableField('new_contacttypeprivate');
+                switch (objSchoolType) {
+                    case 100000000: // Private if account is a private school
+                        enableField('new_contacttypeprivate');
+                        disableField('new_contacttypepublic');
+                        getAttributeObject('new_contacttypeprivate').addOnChange(
+                            console.log(contactTypeOnChange('new_contacttypeprivate', objSchoolType)));
+                        break;
+                    case 100000001: // Public if account is a public school
+                        enableField('new_contacttypepublic');
+                        disableField('new_contacttypeprivate');
+                        //getAttributeObject('new_contacttypeprivate').addOnChange(oohlalah);
+                        //getAttributeObject('new_contacttypepublic').addOnChange(alert("on change"));
+                        break;
+                    default: // if account type is not defined hide both private and public fields
+                        disableField('new_contacttypepublic');
+                        disableField('new_contacttypeprivate');
+                        alert("Necesita identificar la cuenta " + accountObject[0].name + " como escuela publica o privada.");
+                        break;
                 }
                 
                 
-                
-                
                 //console.log(Xrm.Page.context.getQueryStringParameters());
-                //alert(resultContact.new_SubType.Value);
-                //alert("Milton Reyes this: " + data.d.new_SubType.Value);
-                //var mcCity1 = resultContact.Address1_City;
                 //replace the fields with the fields on your entity
-                //Xrm.Page.getAttribute("").setValue(mcCity1);
                 //Xrm.Page.getAttribute("").setValue(resultContact.new_subtype);
-                //Xrm.Page.getAttribute("").setValue(resultContact.Address1_Telephone1);
             },
             error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
         });
     }
 }
-function ohlalah() {
-    alert("on change!");
-}
-function contactTypeOnChange(attribute) {
-    switch (getAttributeObject(attribute).getValue()) {
-        case 100000000:
-            alert("on change!");
-            break;
-        default:
-            sectionHide(getSection('general', 'teacher_section'));
-            break;
-    }
-}
-function getAttributeObject(attribute) { 
-    return Xrm.Page.getAttribute(attribute);
-}
-function getSection(tab, section) { return Xrm.Page.ui.tabs.get(tab).sections.get(section); }
-function enableField(field) {
-    $('#' + field + '_c').parent().show(); //show <tr> field with label/input
-    Xrm.Page.ui.controls.get(field).setDisabled(false);
-    Xrm.Page.ui.controls.get(field).setRequiredLevel("required"); //this field is a must
-}
-function disableField(field) {
-    $('#' + field + '_c').parent().hide(); //hide public options
-    Xrm.Page.ui.controls.get(field).setRequiredLevel("none");
-    Xrm.Page.ui.controls.get(field).setDisabled(true);
-}
-function sectionShow(show) { show.setVisible(true); }
-function sectionHide() {
-    for (var i = 0; i < arguments.length; i++)
-        arguments[i].setVisible(false);}
-function changeContactNumber() { // Previously Onload() now renamed to changeContactNumber. Copied to maintian backwards compatibility.
-    // This function is probably useless since the field described here doesn't have any values
-    // in the database.
-    var a=Xrm.Page.getAttribute("new_contactnumber").getValue();
-    if(a!=null) {
-        a=a.replace(",","");
-        a=a.replace(",","");
-    }
-    Xrm.Page.getAttribute("new_codigocontacto").setValue(a);
-}
+
 

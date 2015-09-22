@@ -1,4 +1,4 @@
-function Onload() { // Previously removed commas to contact number value
+function Onload() { // Moved to contactFormScript.js and renamed to changeContactNumber()
     var a=Xrm.Page.getAttribute("new_contactnumber").getValue();
     if(a!=null) {
         a=a.replace(",","");
@@ -28,6 +28,7 @@ function OnTypeContactChange() {
     }
 }
 function contactTypeOnChange() {
+    // Moved to contactFormScript.js
     var contactTypeValue = Xrm.Page.getAttribute("new_contacttype").getValue(),
     // Student section
         studentSection = Xrm.Page.ui.tabs.get("general").sections.get("student_section"),
@@ -35,11 +36,12 @@ function contactTypeOnChange() {
         teacherSection = Xrm.Page.ui.tabs.get("general").sections.get("teacher_section"),
     // Coach section
         coachSection = Xrm.Page.ui.tabs.get("general").sections.get("coach_section");
-    function sectionShow(show) {
+    function sectionShow(show) { // Moved to contactFormScript.js
         // Shows a section while hiding the other two
         show.setVisible(true);
     }
-    function sectionHide() { //Hides all sections
+    function sectionHide() { // Moved to contactFormScript.js renamed to sectionsHide()
+        //Hides all sections
         for (var i = 0; i < arguments.length; i++) {
             arguments[i].setVisible(false);
         }
@@ -66,7 +68,9 @@ function contactTypeOnChange() {
             break;
     }
 }
-function getAccountName() { //Gets the account value
+function getAccountName() { 
+    // Function moved to contactFormScript.js and renamed to getAttributeObject()
+    //Gets the account value
     var accountValue = Xrm.Page.getAttribute("parentcustomerid").getValue();
     alert(accountValue[0].name);  //alerts the object value name
 }

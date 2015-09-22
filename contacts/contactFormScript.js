@@ -34,13 +34,21 @@ function contactTypeOnChange(attribute, type) {
     // Getting sections in the contact form
     var studentSection = getSection('general', 'student_section'),
         teacherSection = getSection('general', 'teacher_section'),
-        coachSection = getSection('general', 'coach_section');
+        coachSection = getSection('general', 'coach_section'),
+        typeValue = getAttributeObject(attribute).getValue();
+    console.log(type);
+    console.log(typeValue);
     if (type == 100000000) { // School type private from obj in accountDetails()
-        switch (getAttributeObject(attribute).getValue()) {
+        switch (typeValue) {
             case 100000016: // Teacher
                 //If a teacher display teacher section, hide not relevant
                 sectionsHide(studentSection, coachSection);
                 sectionShow(teacherSection);
+                break;
+            case 100000003: // Coach
+                // if a coach, show coach section, hide not relevant
+                sectionsHide(studentSection, teacherSection);
+                sectionShow(coachSection);
                 break;
             default:
                 sectionsHide(studentSection, teacherSection, coachSection);
@@ -48,7 +56,7 @@ function contactTypeOnChange(attribute, type) {
         }
     }
     if (type == 100000001) {
-        switch (getAttributeObject(attribute).getValue()) {
+        switch (typeValue) {
             case 100000000: // Teacher
                 //If a teacher display teacher section, hide not relevant
                 sectionsHide(studentSection, coachSection);
@@ -70,6 +78,32 @@ function contactTypeOnChange(attribute, type) {
         }
     }
 }
+function changeThisName() {
+    objSchoolType = obj.new_SubType.Value;
+                // on account object account school type value hide or display related fields
+                switch (objSchoolType) {
+                    case 100000000: // Private if account is a private school
+                        enableField('new_contacttypeprivate');
+                        disableField('new_contacttypepublic');
+                        getAttributeObject('new_contacttypeprivate').addOnChange(contactTypeOnChange('new_contacttypeprivate', objSchoolType));
+                        break;
+                    case 100000001: // Public if account is a public school
+                        enableField('new_contacttypepublic');
+                        disableField('new_contacttypeprivate');
+                        // getAttributeObject('new_contacttypeprivate').addOnChange(oohlalah);
+                        // getAttributeObject('new_contacttypepublic').addOnChange(alert("on change"));
+                        break;
+                    default: // if account type is not defined hide both private and public fields
+                        disableField('new_contacttypepublic');
+                        disableField('new_contacttypeprivate');
+                        alert("Necesita identificar la cuenta " + accountObject[0].name + " como escuela publica o privada.");
+                        break;
+                }
+}
+function alertObject() {
+    var obj = getAccountDetails();
+    console.log(obj.new_SubType.Value);
+}
 /* Refer to Microsoft Dynamics CRM 2015 SDK:
    {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
    RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js */
@@ -81,58 +115,38 @@ function getAccountDetails() {
        displays certain fields and sets it's required permission in the current
        contact form */
     var accountObject = getAttributeObject('parentcustomerid').getValue(); //replaced accountObject with getAttributeValue()
-    //console.log(accountObject);
-    //if account field is not empty make request
+    // console.log(accountObject);
+    // if account field is not empty make request
     if ((accountObject != null)) {
         var accountObjectId = accountObject[0].id, //get account id
             clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
             ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
             odataSetName = "AccountSet"; //This is found when exporting 
         //account entity XML
-        odataSetName = encodeURIComponent(odataSetName); //prevent sql injection
-        accountObjectId = encodeURIComponent(accountObjectId); //prevent sql injection
+        odataSetName = encodeURIComponent(odataSetName); // prevent sql injection
+        accountObjectId = encodeURIComponent(accountObjectId); // prevent sql injection
         var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
         // odataSelect would be the select query statement
-        $.ajax({
-            type: "GET",
-            //HTTP GET request
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            url: odataSelect,
-            beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
-            success: function (data, textStatus, XmlHttpRequest) {
-                //when request success, get the account object
-                var obj = JSON.parse(XmlHttpRequest.responseText).d,
-                    objSchoolType = obj.new_SubType.Value;
-                console.log(objSchoolType);
-                //on account object account school type value hide or display related fields
-                switch (objSchoolType) {
-                    case 100000000: // Private if account is a private school
-                        enableField('new_contacttypeprivate');
-                        disableField('new_contacttypepublic');
-                        getAttributeObject('new_contacttypeprivate').addOnChange(
-                            console.log(contactTypeOnChange('new_contacttypeprivate', objSchoolType)));
-                        break;
-                    case 100000001: // Public if account is a public school
-                        enableField('new_contacttypepublic');
-                        disableField('new_contacttypeprivate');
-                        //getAttributeObject('new_contacttypeprivate').addOnChange(oohlalah);
-                        //getAttributeObject('new_contacttypepublic').addOnChange(alert("on change"));
-                        break;
-                    default: // if account type is not defined hide both private and public fields
-                        disableField('new_contacttypepublic');
-                        disableField('new_contacttypeprivate');
-                        alert("Necesita identificar la cuenta " + accountObject[0].name + " como escuela publica o privada.");
-                        break;
-                }
-                
-                
-                //console.log(Xrm.Page.context.getQueryStringParameters());
-                //replace the fields with the fields on your entity
-                //Xrm.Page.getAttribute("").setValue(resultContact.new_subtype);
-            },
-            error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
-        });
+        function () {
+            $.ajax({
+                type: "GET",
+                // HTTP GET request
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: odataSelect,
+                beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
+                success: function (data, textStatus, XmlHttpRequest) {
+                    // when request success, get the account object
+                    var obj = JSON.parse(XmlHttpRequest.responseText).d;
+                    console.log(obj);
+                    
+                    // console.log(Xrm.Page.context.getQueryStringParameters());
+                    // replace the fields with the fields on your entity
+                    // Xrm.Page.getAttribute("").setValue(resultContact.new_subtype);
+                },
+                error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
+            });
+        }
     }
 }
 

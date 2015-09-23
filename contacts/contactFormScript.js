@@ -117,7 +117,7 @@ function getAccountDetails() {
     var accountObject = getAttributeObject('parentcustomerid').getValue(); //replaced accountObject with getAttributeValue()
     // console.log(accountObject);
     // if account field is not empty make request
-    if ((accountObject != null)) {
+    if (accountObject != null) {
         var accountObjectId = accountObject[0].id, //get account id
             clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
             ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
@@ -127,7 +127,8 @@ function getAccountDetails() {
         accountObjectId = encodeURIComponent(accountObjectId); // prevent sql injection
         var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
         // odataSelect would be the select query statement
-        function () {
+        
+            
             $.ajax({
                 type: "GET",
                 // HTTP GET request
@@ -136,17 +137,19 @@ function getAccountDetails() {
                 url: odataSelect,
                 beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
                 success: function (data, textStatus, XmlHttpRequest) {
-                    // when request success, get the account object
-                    var obj = JSON.parse(XmlHttpRequest.responseText).d;
-                    console.log(obj);
-                    
+                    //var obj = JSON.parse(XmlHttpRequest.responseText).d;
+                    console.log(data.d);
                     // console.log(Xrm.Page.context.getQueryStringParameters());
                     // replace the fields with the fields on your entity
                     // Xrm.Page.getAttribute("").setValue(resultContact.new_subtype);
                 },
                 error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
             });
-        }
+        
+        //console.log(objectAjax);
+        //console.log(objectAjax.responseJSON[0].d);
+        
+        
     }
 }
 

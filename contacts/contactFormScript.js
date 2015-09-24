@@ -1,3 +1,7 @@
+var accountObject = getAttribute('parentcustomerid').getValue(),
+    clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
+    ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
+    odataSetName = "AccountSet"; //This is found when exporting 
 function changeContactNumber() { // Previously Onload() now renamed to changeContactNumber. Copied to maintian backwards compatibility.
     // This function is probably useless since the field described here doesn't have any values
     // in the database.
@@ -11,7 +15,7 @@ function changeContactNumber() { // Previously Onload() now renamed to changeCon
 function oohlalah() {
     alert("on change!");
 }
-function getAttributeObject(attribute) {
+function getAttribute(attribute) {
     return Xrm.Page.getAttribute(attribute);
 }
 function getSection(tab, section) { return Xrm.Page.ui.tabs.get(tab).sections.get(section); }
@@ -35,7 +39,7 @@ function contactTypeOnChange(attribute, type) {
     var studentSection = getSection('general', 'student_section'),
         teacherSection = getSection('general', 'teacher_section'),
         coachSection = getSection('general', 'coach_section'),
-        typeValue = getAttributeObject(attribute).getValue();
+        typeValue = getAttribute(attribute).getValue();
     console.log(type);
     console.log(typeValue);
     if (type == 100000000) { // School type private from obj in accountDetails()
@@ -78,6 +82,10 @@ function contactTypeOnChange(attribute, type) {
         }
     }
 }
+function alertObject() {
+    var obj = getAccountDetails();
+    console.log(obj.new_SubType.Value);
+}
 function changeThisName() {
     objSchoolType = obj.new_SubType.Value;
                 // on account object account school type value hide or display related fields
@@ -85,13 +93,13 @@ function changeThisName() {
                     case 100000000: // Private if account is a private school
                         enableField('new_contacttypeprivate');
                         disableField('new_contacttypepublic');
-                        getAttributeObject('new_contacttypeprivate').addOnChange(contactTypeOnChange('new_contacttypeprivate', objSchoolType));
+                        getAttribute('new_contacttypeprivate').addOnChange(contactTypeOnChange('new_contacttypeprivate', objSchoolType));
                         break;
                     case 100000001: // Public if account is a public school
                         enableField('new_contacttypepublic');
                         disableField('new_contacttypeprivate');
-                        // getAttributeObject('new_contacttypeprivate').addOnChange(oohlalah);
-                        // getAttributeObject('new_contacttypepublic').addOnChange(alert("on change"));
+                        // getAttribute('new_contacttypeprivate').addOnChange(oohlalah);
+                        // getAttribute('new_contacttypepublic').addOnChange(alert("on change"));
                         break;
                     default: // if account type is not defined hide both private and public fields
                         disableField('new_contacttypepublic');
@@ -99,10 +107,6 @@ function changeThisName() {
                         alert("Necesita identificar la cuenta " + accountObject[0].name + " como escuela publica o privada.");
                         break;
                 }
-}
-function alertObject() {
-    var obj = getAccountDetails();
-    console.log(obj.new_SubType.Value);
 }
 /* Refer to Microsoft Dynamics CRM 2015 SDK:
    {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
@@ -114,43 +118,42 @@ function getAccountDetails() {
        public/private/else) then with the requested value from the account
        displays certain fields and sets it's required permission in the current
        contact form */
-    var accountObject = getAttributeObject('parentcustomerid').getValue(); //replaced accountObject with getAttributeValue()
-    // console.log(accountObject);
-    // if account field is not empty make request
-    if (accountObject != null) {
-        var accountObjectId = accountObject[0].id, //get account id
-            clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
-            ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
-            odataSetName = "AccountSet"; //This is found when exporting 
-        //account entity XML
-        odataSetName = encodeURIComponent(odataSetName); // prevent sql injection
-        accountObjectId = encodeURIComponent(accountObjectId); // prevent sql injection
-        var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
-        // odataSelect would be the select query statement
-        
-            
-            $.ajax({
-                type: "GET",
-                // HTTP GET request
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                url: odataSelect,
-                beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
-                success: function (data, textStatus, XmlHttpRequest) {
-                    //var obj = JSON.parse(XmlHttpRequest.responseText).d;
-                    console.log(data.d);
-                    // console.log(Xrm.Page.context.getQueryStringParameters());
-                    // replace the fields with the fields on your entity
-                    // Xrm.Page.getAttribute("").setValue(resultContact.new_subtype);
-                },
-                error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
-            });
-        
-        //console.log(objectAjax);
-        //console.log(objectAjax.responseJSON[0].d);
-        
-        
+    if (!accountObject) {
+        Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve the accountObject.', 'ERROR');
+        return;
+    } else {
+        var accountObjectId = accountObject[0].id; //get account id
+        accountObjectId = encodeURIComponent(accountObjectId);
     }
+    if (!odataSetName) {
+        Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve odataSetName.','ERROR');
+        return;
+    } else {
+        odataSetName = encodeURIComponent(odataSetName);
+    }
+    //account entity XML
+    odataSetName = encodeURIComponent(odataSetName); // prevent sql injection
+    accountObjectId = encodeURIComponent(accountObjectId); // prevent sql injection
+    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
+    // odataSelect would be the select query statement
+    $.ajax({
+        type: "GET",
+        // HTTP GET request
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: odataSelect,
+        beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
+        success: successCallBack,
+        //function (data, textStatus, XmlHttpRequest) {
+            //var obj = JSON.parse(XmlHttpRequest.responseText).d;
+            //var obj = data.d;
+            //console.log(obj.new_SubType.Value);
+            // console.log(Xrm.Page.context.getQueryStringParameters());
+            // replace the fields with the fields on your entity
+            // Xrm.Page.getAttribute("").setValue(resultContact.new_subtype);
+        //},
+        error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
+    });
+    console.log(objCall);
+    //console.log(objectAjax.responseJSON[0].d);
 }
-
-

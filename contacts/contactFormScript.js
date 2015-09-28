@@ -52,101 +52,33 @@ function privateSchoolContactType() {
                 break;
         }
 }
-function contactTypeOnChange(attribute, type) {
-    // Getting sections in the contact form
+function publicSchoolContactType() {
     var studentSection = getSection('general', 'student_section'),
         teacherSection = getSection('general', 'teacher_section'),
         coachSection = getSection('general', 'coach_section'),
-        typeValue = getAttribute('new_contacttypeprivate').getValue();
-    console.log(type);
-    console.log(typeValue);
-    if (type == 100000000) { // School type private from obj in accountDetails()
-        switch (typeValue) {
-            case 100000016: // Teacher
-                //If a teacher display teacher section, hide not relevant
-                sectionsHide(studentSection, coachSection);
-                sectionShow(teacherSection);
-                break;
-            case 100000003: // Coach
-                // if a coach, show coach section, hide not relevant
-                sectionsHide(studentSection, teacherSection);
-                sectionShow(coachSection);
-                break;
-            default:
-                sectionsHide(studentSection, teacherSection, coachSection);
-                break;
-        }
-    }
-    if (type == 100000001) {
-        switch (typeValue) {
-            case 100000000: // Teacher
-                //If a teacher display teacher section, hide not relevant
-                sectionsHide(studentSection, coachSection);
-                sectionShow(teacherSection);
-                break;
-            case 100000021: //Student
-                //If the contact type is a student, display the student section hide not relevant
-                sectionsHide(teacherSection, coachSection);
-                sectionShow(studentSection);
-                break;
-            case 100000002: // Coach
-                // if a coach, show coach section, hide not relevant
-                sectionsHide(studentSection, teacherSection);
-                sectionShow(coachSection);
-                break;
-            default:
-                sectionsHide(studentSection, teacherSection, coachSection);
-                break;
-        }
+        hrSection = getSection('general', 'hr_section'),
+        typeValue = getAttribute('new_contacttypepublic').getValue();
+    switch (typeValue) {
+        case 100000000: // Teacher
+            //If a teacher display teacher section, hide not relevant
+            sectionsHide(studentSection, coachSection, hrSection);
+            sectionShow(teacherSection);
+            break;
+        case 100000021: //Student
+            //If the contact type is a student, display the student section hide not relevant
+            sectionsHide(teacherSection, coachSection, hrSection);
+            sectionShow(studentSection);
+            break;
+        case 100000002: // Coach
+            // if a coach, show coach section, hide not relevant
+            sectionsHide(studentSection, teacherSection, hrSection);
+            sectionShow(coachSection);
+            break;
+        default:
+            sectionsHide(studentSection, teacherSection, coachSection, hrSection);
+            break;
     }
 }
-function changedFunctionName() {
-    
-                        //var typeValue = Xrm.Page.getAttribute('new_contacttypeprivate').getValue();
-                        //Xrm.Page.getAttribute('new_contacttypeprivate').addOnChange(alert(typeValue));
-                        //    switch (Xrm.Page.getAttribute('new_contacttypeprivate').getValue()) {
-                        //        case 100000016: // Teacher
-                        //            //If a teacher display teacher section, hide not relevant
-                        //            sectionsHide(studentSection, coachSection);
-                        //            sectionShow(teacherSection);
-                        //            break;
-                        //        case 100000003: // Coach
-                        //            // if a coach, show coach section, hide not relevant
-                        //            sectionsHide(studentSection, teacherSection);
-                        //            sectionShow(coachSection);
-                        //            break;
-                        //        default:
-                        //            sectionsHide(studentSection, teacherSection, coachSection);
-                        //            break;
-                        //    });
-                   
-                        //// contactTypeOnChange('new_contacttypepublic', schoolType);
-                        //// getAttribute('new_contacttypeprivate').addOnChange(oohlalah);
-                        //// getAttribute('new_contacttypepublic').addOnChange(alert("on change"));
-                        //var typeValue = Xrm.Page.getAttribute('new_contacttypepublic').getValue();
-                        //getAttribute('new_contacttypepublic').addOnChange(
-                        //    switch (Xrm.Page.getAttribute('new_contacttypepublic').getValue()) {
-                        //        case 100000000: // Teacher
-                        //            //If a teacher display teacher section, hide not relevant
-                        //            sectionsHide(studentSection, coachSection);
-                        //            sectionShow(teacherSection);
-                        //            break;
-                        //        case 100000021: //Student
-                        //            //If the contact type is a student, display the student section hide not relevant
-                        //            sectionsHide(teacherSection, coachSection);
-                        //            sectionShow(studentSection);
-                        //            break;
-                        //        case 100000002: // Coach
-                        //            // if a coach, show coach section, hide not relevant
-                        //            sectionsHide(studentSection, teacherSection);
-                        //            sectionShow(coachSection);
-                        //            break;
-                        //        default:
-                        //            sectionsHide(studentSection, teacherSection, coachSection);
-                        //            break;
-                        //    });
-                  
-} // END OF getAccountDetails
 function getAccountDetails() {
     /* Refer to Microsoft Dynamics CRM 2015 SDK:
        {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
@@ -224,6 +156,26 @@ clic en ' + obj.Name + ' (abajo).', 'ERROR');
                         enableField('new_contacttypepublic');
                         disableField('new_contacttypeprivate');
                         if (getAttribute('new_contacttypepublic').getValue() != null) {
+                            switch (getAttribute('new_contacttypepublic').getValue()) {
+                                case 100000000: // Teacher
+                                    //If a teacher display teacher section, hide not relevant
+                                    sectionsHide(studentSection, coachSection, hrSection);
+                                    sectionShow(teacherSection);
+                                    break;
+                                case 100000021: //Student
+                                    //If the contact type is a student, display the student section hide not relevant
+                                    sectionsHide(teacherSection, coachSection, hrSection);
+                                    sectionShow(studentSection);
+                                    break;
+                                case 100000002: // Coach
+                                    // if a coach, show coach section, hide not relevant
+                                    sectionsHide(studentSection, teacherSection, hrSection);
+                                    sectionShow(coachSection);
+                                    break;
+                                default:
+                                    sectionsHide(studentSection, teacherSection, coachSection, hrSection);
+                                    break;
+                            }
                         }
                     } else {
                         disableField('new_contacttypepublic');

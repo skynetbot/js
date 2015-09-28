@@ -30,13 +30,25 @@ function sectionsHide() {
     var i;
     for (i = 0; i < arguments.length; i++)
         arguments[i].setVisible(false); }
+function subjectsTaught() {
+    var subjectsNumber = getAttribute('new_subjectstaught').getText(),
+        i;
+    if (subjectsNumber != null) {
+        for (i = 0; i < 8; i++) {
+            disableField('new_subject'+i);
+        }
+        for (i = 0; i < subjectsNumber; i++) {
+            enableField('new_subject'+i);
+        }
+    }
+}
 function privateSchoolContactType() {
     var studentSection = getSection('general', 'student_section'),
         teacherSection = getSection('general', 'teacher_section'),
         coachSection = getSection('general', 'coach_section'),
         hrSection = getSection('general', 'hr_section'),
-        typeValue = getAttribute('new_contacttypeprivate').getValue();
-    switch (typeValue) {
+        privateTypeValue = getAttribute('new_contacttypeprivate').getValue();
+    switch (privateTypeValue) {
             case 100000016: // Teacher
                 //If a teacher display teacher section, hide not relevant
                 sectionsHide(studentSection, coachSection, hrSection);
@@ -57,19 +69,19 @@ function publicSchoolContactType() {
         teacherSection = getSection('general', 'teacher_section'),
         coachSection = getSection('general', 'coach_section'),
         hrSection = getSection('general', 'hr_section'),
-        typeValue = getAttribute('new_contacttypepublic').getValue();
-    switch (typeValue) {
-        case 100000000: // Teacher
+        publicTypeValue = getAttribute('new_contacttypepublic').getValue();
+    switch (publicTypeValue) {
+        case 100000026: // Teacher
             //If a teacher display teacher section, hide not relevant
             sectionsHide(studentSection, coachSection, hrSection);
             sectionShow(teacherSection);
             break;
-        case 100000021: //Student
+        case 100000022: //Student
             //If the contact type is a student, display the student section hide not relevant
             sectionsHide(teacherSection, coachSection, hrSection);
             sectionShow(studentSection);
             break;
-        case 100000002: // Coach
+        case 100000004: // Coach
             // if a coach, show coach section, hide not relevant
             sectionsHide(studentSection, teacherSection, hrSection);
             sectionShow(coachSection);
@@ -132,55 +144,61 @@ clic en ' + obj.Name + ' (abajo).', 'ERROR');
                 } else {
                     var schoolType = obj.new_SubType.Value;
                     // on account object account school type value hide or display related fields
-                    if (schoolType == 100000000) { // Private if account is a private school
-                        enableField('new_contacttypeprivate');
-                        disableField('new_contacttypepublic');
-                        if (getAttribute('new_contacttypeprivate').getValue() != null) {
-                            switch (getAttribute('new_contacttypeprivate').getValue()) {
-                                case 100000016: // Teacher
-                                    //If a teacher display teacher section, hide not relevant
-                                    sectionsHide(studentSection, coachSection, hrSection);
-                                    sectionShow(teacherSection);
-                                    break;
-                                case 100000003: // Coach
-                                    // if a coach, show coach section, hide not relevant
-                                    sectionsHide(studentSection, teacherSection, hrSection);
-                                    sectionShow(coachSection);
-                                    break;
-                                default:
-                                    sectionsHide(studentSection, teacherSection, coachSection, hrSection);
-                                    break;
+                    switch (schoolType) {
+                        case 100000000: // Private if account is a private school
+                            enableField('new_contacttypeprivate');
+                            disableField('new_contacttypepublic');
+                            if (getAttribute('new_contacttypeprivate').getValue() != null) {
+                                switch (getAttribute('new_contacttypeprivate').getValue()) {
+                                    case 100000016: // Teacher
+                                        //If a teacher display teacher section, hide not relevant
+                                        sectionsHide(studentSection, coachSection, hrSection);
+                                        sectionShow(teacherSection);
+                                        subjectsTaught();
+                                        break;
+                                    case 100000003: // Coach
+                                        // if a coach, show coach section, hide not relevant
+                                        sectionsHide(studentSection, teacherSection, hrSection);
+                                        sectionShow(coachSection);
+                                        break;
+                                    default:
+                                        sectionsHide(studentSection, teacherSection, coachSection, hrSection);
+                                        break;
+                                }
                             }
-                        }
-                    } else if (schoolType == 100000001) { // Public if account is a public school
-                        enableField('new_contacttypepublic');
-                        disableField('new_contacttypeprivate');
-                        if (getAttribute('new_contacttypepublic').getValue() != null) {
-                            switch (getAttribute('new_contacttypepublic').getValue()) {
-                                case 100000000: // Teacher
-                                    //If a teacher display teacher section, hide not relevant
-                                    sectionsHide(studentSection, coachSection, hrSection);
-                                    sectionShow(teacherSection);
-                                    break;
-                                case 100000021: //Student
-                                    //If the contact type is a student, display the student section hide not relevant
-                                    sectionsHide(teacherSection, coachSection, hrSection);
-                                    sectionShow(studentSection);
-                                    break;
-                                case 100000002: // Coach
-                                    // if a coach, show coach section, hide not relevant
-                                    sectionsHide(studentSection, teacherSection, hrSection);
-                                    sectionShow(coachSection);
-                                    break;
-                                default:
-                                    sectionsHide(studentSection, teacherSection, coachSection, hrSection);
-                                    break;
+                            break;
+                        case 100000001: // Public if account is a public school
+                            enableField('new_contacttypepublic');
+                            disableField('new_contacttypeprivate');
+                            if (getAttribute('new_contacttypepublic').getValue() != null) {
+                                switch (getAttribute('new_contacttypepublic').getValue()) {
+                                    case 100000026: //Teacher
+                                        //If a teacher display teacher section, hide not relevant
+                                        sectionsHide(studentSection, coachSection, hrSection);
+                                        sectionShow(teacherSection);
+                                        subjectsTaught();
+                                        break;
+                                    case 100000022: //Student
+                                        //If the contact type is a student, display the student section hide not relevant
+                                        sectionsHide(teacherSection, coachSection, hrSection);
+                                        sectionShow(studentSection);
+                                        break;
+                                    case 100000004: // Coach
+                                        // if a coach, show coach section, hide not relevant
+                                        sectionsHide(studentSection, teacherSection, hrSection);
+                                        sectionShow(coachSection);
+                                        break;
+                                    default:
+                                        sectionsHide(studentSection, teacherSection, coachSection, hrSection);
+                                        break;
+                                }
                             }
-                        }
-                    } else {
-                        disableField('new_contacttypepublic');
-                        disableField('new_contacttypeprivate');
-                    }
+                            break;
+                        default:
+                            disableField('new_contacttypepublic');
+                            disableField('new_contacttypeprivate');
+                            break;
+                    } // Switch schoolType BRACKET
                 } // ELSE BRACKET
             }, // SUCCESS BRACKET
             error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }

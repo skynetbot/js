@@ -1,16 +1,16 @@
-Administrator,100000006
-Assistant,100000007
-Biometric Technician,100000005
-Buyer,100000008
-Coach,100000002
-Community Advisor,100000003
-Comunity,100000001
-Coordinator,100000009
-Counselor,100000010
-Director,100000011
-Parent - Guardian,100000026
-Librarian,100000012
-Mentor,100000004
+Administrator,100000000
+Assistant,100000001
+Biometric Technician,100000002
+Buyer,100000003
+Coach,100000004
+Community Advisor,100000005
+Comunity,100000006
+Coordinator,100000007
+Counselor,100000008
+Director,100000009
+Parent - Guardian,100000010
+Librarian,100000011
+Mentor,100000012
 Owner,100000013
 President,100000014
 Principal,100000015
@@ -19,12 +19,12 @@ Promoter,100000017
 Recepcionist,100000018
 Resource,100000019
 Secretary,100000020
-Security Guard,100000028
-Student,100000021
-Superintendent,100000022
-Superintendent (Auxiliar),100000023
-Supervisor,100000024
-Teacher,100000000
+Security Guard,100000021
+Student,100000022
+Superintendent,100000023
+Superintendent (Auxiliar),100000024
+Supervisor,100000025
+Teacher,100000026
 Transportation,100000027
-Tutor,100000025
+Tutor,100000028
 Vice-principal,100000029

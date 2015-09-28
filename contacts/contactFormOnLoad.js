@@ -9,10 +9,14 @@ function getAccountDetails() {
        public/private/else) then with the requested value from the account
        displays certain fields and sets it's required permission in the current
        contact form */
-    var accountObject = getAttribute('parentcustomerid').getValue(),
+    var accountObject = getAttribute('parentcustomerid').getValue(), // getAttribute From contactFormScript.js
         clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
         ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
-        odataSetName = "AccountSet"; //This is found when exporting 
+        odataSetName = "AccountSet", //This is found when exporting 
+        studentSection = getSection('general', 'student_section'),
+        teacherSection = getSection('general', 'teacher_section'),
+        coachSection = getSection('general', 'coach_section'),
+        hrSection = getSection('general', 'hr_section');
     if (!accountObject) {
         Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve the accountObject.', 'ERROR');
         return;
@@ -50,9 +54,27 @@ clic en ' + obj.Name + ' (abajo).', 'ERROR');
                     if (schoolType == 100000000) { // Private if account is a private school
                         enableField('new_contacttypeprivate');
                         disableField('new_contacttypepublic');
+                        if (getAttribute('new_contacttypeprivate').getValue() != null) {
+                            switch (getAttribute('new_contacttypeprivate').getValue()) {
+                                case 100000016: // Teacher
+                                    //If a teacher display teacher section, hide not relevant
+                                    sectionsHide(studentSection, coachSection, hrSection);
+                                    sectionShow(teacherSection);
+                                    break;
+                                case 100000003: // Coach
+                                    // if a coach, show coach section, hide not relevant
+                                    sectionsHide(studentSection, teacherSection, hrSection);
+                                    sectionShow(coachSection);
+                                    break;
+                                default:
+                                    sectionsHide(studentSection, teacherSection, coachSection, hrSection);
+                                    break;
+                            }
+                        }
                     } else if (schoolType == 100000001) { // Public if account is a public school
                         enableField('new_contacttypepublic');
                         disableField('new_contacttypeprivate');
+                        getAttribute('new_contacttypepublic').getValue();
                     } else {
                         disableField('new_contacttypepublic');
                         disableField('new_contacttypeprivate');

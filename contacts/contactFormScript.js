@@ -32,15 +32,38 @@ function sectionsHide() {
         arguments[i].setVisible(false); }
 function subjectsTaught() {
     var subjectsNumber = getAttribute('new_subjectstaught').getText(),
-        i;
+        subjectsNumberDifference = 8 - subjectsNumber,
+        i, j;
     if (subjectsNumber != null) {
-        for (i = 0; i < 8; i++) {
+        for (i = 0; i <= 7; i++) {
+            getAttribute('new_subject'+i).setValue(null);
             disableField('new_subject'+i);
         }
         for (i = 0; i < subjectsNumber; i++) {
             enableField('new_subject'+i);
         }
+    } else {
+        for (i = 0; i <= 7; i++) {
+            getAttribute('new_subject'+i).setValue(null);
+            disableField('new_subject'+i);
+        }
     }
+        //for (i = 7; 
+        //for (i = 0; i < 8; i++) {
+        //    disableField('new_subject'+i);
+        //}
+        //for (j = 7; j > subjectsNumber; j--) {
+        //    disableField('new_subject'+j);
+        //    //Xrm.Page.ui.setFormNotification('Milton: '+ i, 'ERROR');
+        //}
+    //    for (i = 0; i < 8; i++) {
+    //        disableField('new_subject'+i);
+    //        getAttribute('new_subject'+i).setValue(null);
+    //    }
+    //    for (i = 0; i < subjectsNumber; i++) {
+    //        enableField('new_subject'+i);
+    //    }
+    //}
 }
 function privateSchoolContactType() {
     var studentSection = getSection('general', 'student_section'),

@@ -125,16 +125,13 @@ function getAccountDetails() {
 como p\u00FAblico o privado.  Favor de editar este campo para mostrar informaci\u00F3n pertinente al contacto. Para editar haga \
 clic en ' + obj.Name + ' (abajo).', 'ERROR');
                 } else {
-                    var schoolType = obj.new_SubType.Value,
-                        studentSection = getSection('general', 'student_section'),
-                        teacherSection = getSection('general', 'teacher_section'),
-                        coachSection = getSection('general', 'coach_section');
+                    var schoolType = obj.new_SubType.Value;
                     // on account object account school type value hide or display related fields
                     if (schoolType == 100000000) { // Private if account is a private school
                         enableField('new_contacttypeprivate');
                         disableField('new_contacttypepublic');
-                        var typeValue = Xrm.Page.getAttribute('new_contacttypeprivate').getValue();
-                        Xrm.Page.getAttribute('new_contacttypeprivate').addOnChange(alert(typeValue));
+                        //var typeValue = Xrm.Page.getAttribute('new_contacttypeprivate').getValue();
+                        //Xrm.Page.getAttribute('new_contacttypeprivate').addOnChange(alert(typeValue));
                         //    switch (Xrm.Page.getAttribute('new_contacttypeprivate').getValue()) {
                         //        case 100000016: // Teacher
                         //            //If a teacher display teacher section, hide not relevant
@@ -151,8 +148,8 @@ clic en ' + obj.Name + ' (abajo).', 'ERROR');
                         //            break;
                         //    });
                     } else if (schoolType == 100000001) { // Public if account is a public school
-                        //enableField('new_contacttypepublic');
-                        //disableField('new_contacttypeprivate');
+                        enableField('new_contacttypepublic');
+                        disableField('new_contacttypeprivate');
                         //// contactTypeOnChange('new_contacttypepublic', schoolType);
                         //// getAttribute('new_contacttypeprivate').addOnChange(oohlalah);
                         //// getAttribute('new_contacttypepublic').addOnChange(alert("on change"));
@@ -182,11 +179,11 @@ clic en ' + obj.Name + ' (abajo).', 'ERROR');
                         //disableField('new_contacttypepublic');
                         //disableField('new_contacttypeprivate');
                     }
-                } // SUCCESS BRACKET
+                } // ELSE BRACKET
                 // console.log(Xrm.Page.context.getQueryStringParameters());
                 // replace the fields with the fields on your entity
                 // Xrm.Page.getAttribute("").setValue(resultContact.new_subtype);
-            },
+            }, // SUCCESS BRACKET
             error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
         }); // END OF AJAX
 } // END OF getAccountDetails

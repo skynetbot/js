@@ -11,7 +11,7 @@ function changeContactNumber() { // Previously Onload() now renamed to changeCon
 function oohlalah() {
     alert("on change!");
 }
-function getAttribute(attribute) {
+function getAttributeObj(attribute) {
     return Xrm.Page.getAttribute(attribute);
 }
 function getSection(tab, section) { return Xrm.Page.ui.tabs.get(tab).sections.get(section); }
@@ -31,86 +31,91 @@ function sectionsHide() {
     for (i = 0; i < arguments.length; i++)
         arguments[i].setVisible(false); }
 function subjectsTaught() {
-    var subjectsNumber = getAttribute('new_subjectstaught').getText(),
-        subjectsNumberDifference = 8 - subjectsNumber,
-        i, j;
-    if (subjectsNumber != null) {
+    var subjectsNumber = getAttributeObj('new_subjectstaught').getText() - 1,
+        subjectsValue = getAttributeObj('new_subjectstaught').getValue(),
+        i;
+    if (subjectsValue != null) {
         for (i = 0; i <= 7; i++) {
-            getAttribute('new_subject'+i).setValue(null);
-            disableField('new_subject'+i);
-        }
-        for (i = 0; i < subjectsNumber; i++) {
-            enableField('new_subject'+i);
+            if (i <= subjectsNumber) {
+                enableField('new_subject'+i);
+                //Xrm.Page.ui.setFormNotification('Milton: enabled subject'+ i, 'INFORMATION');
+            } else {
+                getAttributeObj('new_subject'+i).setValue(null);
+                disableField('new_subject'+i);
+                //Xrm.Page.ui.setFormNotification('Milton: disabled subject'+ i, 'INFORMATION');
+            }
         }
     } else {
         for (i = 0; i <= 7; i++) {
-            getAttribute('new_subject'+i).setValue(null);
+            getAttributeObj('new_subject'+i).setValue(null);
             disableField('new_subject'+i);
         }
     }
-        //for (i = 7; 
-        //for (i = 0; i < 8; i++) {
-        //    disableField('new_subject'+i);
-        //}
-        //for (j = 7; j > subjectsNumber; j--) {
-        //    disableField('new_subject'+j);
-        //    //Xrm.Page.ui.setFormNotification('Milton: '+ i, 'ERROR');
-        //}
-    //    for (i = 0; i < 8; i++) {
-    //        disableField('new_subject'+i);
-    //        getAttribute('new_subject'+i).setValue(null);
-    //    }
-    //    for (i = 0; i < subjectsNumber; i++) {
-    //        enableField('new_subject'+i);
-    //    }
-    //}
 }
 function privateSchoolContactType() {
-    var studentSection = getSection('general', 'student_section'),
-        teacherSection = getSection('general', 'teacher_section'),
-        coachSection = getSection('general', 'coach_section'),
-        hrSection = getSection('general', 'hr_section'),
-        privateTypeValue = getAttribute('new_contacttypeprivate').getValue();
+    var studentSection = getSection('student_tab', 'student_section'),
+        studentSection2 = getSection('student_tab', 'student_section2'),
+        studentSection3 = getSection('student_tab2', 'student_section3'),
+        teacherSection = getSection('teacher_tab', 'teacher_section'),
+        teacherSection2 = getSection('teacher_tab', 'teacher_section2'),
+        coachSection = getSection('coach_tab', 'coach_section'),
+        coachSection2 = getSection('coach_tab', 'coach_section2'),
+        hrSection = getSection('hr_tab', 'hr_section'),
+        hrSection2 = getSection('hr_tab', 'hr_section2'),
+        privateTypeValue = getAttributeObj('new_contacttypeprivate').getValue();
     switch (privateTypeValue) {
-            case 100000016: // Teacher
-                //If a teacher display teacher section, hide not relevant
-                sectionsHide(studentSection, coachSection, hrSection);
-                sectionShow(teacherSection);
-                break;
-            case 100000003: // Coach
-                // if a coach, show coach section, hide not relevant
-                sectionsHide(studentSection, teacherSection, hrSection);
-                sectionShow(coachSection);
-                break;
-            default:
-                sectionsHide(studentSection, teacherSection, coachSection, hrSection);
-                break;
+        case 100000016: // Teacher
+            //If a teacher display teacher section, hide not relevant
+            sectionsHide(studentSection, studentSection2, studentSection3, coachSection, coachSection2, hrSection, hrSection2);
+            sectionShow(teacherSection);
+            sectionShow(teacherSection2);
+            enableField('new_subjectstaught');
+            break;
+        case 100000003: // Coach
+            // if a coach, show coach section, hide not relevant
+            sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, hrSection, hrSection2);
+            sectionShow(coachSection);
+            sectionShow(coachSection2);
+            break;
+        default:
+            sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, coachSection, coachSection2, hrSection, hrSection2);
+            break;
         }
 }
 function publicSchoolContactType() {
-    var studentSection = getSection('general', 'student_section'),
-        teacherSection = getSection('general', 'teacher_section'),
-        coachSection = getSection('general', 'coach_section'),
-        hrSection = getSection('general', 'hr_section'),
-        publicTypeValue = getAttribute('new_contacttypepublic').getValue();
+    var studentSection = getSection('student_tab', 'student_section'),
+        studentSection2 = getSection('student_tab', 'student_section2'),
+        studentSection3 = getSection('student_tab2', 'student_section3'),
+        teacherSection = getSection('teacher_tab', 'teacher_section'),
+        teacherSection2 = getSection('teacher_tab', 'teacher_section2'),
+        coachSection = getSection('coach_tab', 'coach_section'),
+        coachSection2 = getSection('coach_tab', 'coach_section2'),
+        hrSection = getSection('hr_tab', 'hr_section'),
+        hrSection2 = getSection('hr_tab', 'hr_section2'),
+        publicTypeValue = getAttributeObj('new_contacttypepublic').getValue();
     switch (publicTypeValue) {
         case 100000026: // Teacher
             //If a teacher display teacher section, hide not relevant
-            sectionsHide(studentSection, coachSection, hrSection);
+            sectionsHide(studentSection, studentSection2, studentSection3, coachSection, coachSection2, hrSection, hrSection2);
             sectionShow(teacherSection);
+            sectionShow(teacherSection2);
+            enableField('new_subjectstaught');
             break;
         case 100000022: //Student
             //If the contact type is a student, display the student section hide not relevant
-            sectionsHide(teacherSection, coachSection, hrSection);
+            sectionsHide(teacherSection, teacherSection2, coachSection, coachSection2, hrSection, hrSection2);
             sectionShow(studentSection);
+            sectionShow(studentSection2);
+            sectionShow(studentSection3);
             break;
         case 100000004: // Coach
             // if a coach, show coach section, hide not relevant
-            sectionsHide(studentSection, teacherSection, hrSection);
+            sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, hrSection, hrSection2);
             sectionShow(coachSection);
+            sectionShow(coachSection2);
             break;
         default:
-            sectionsHide(studentSection, teacherSection, coachSection, hrSection);
+            sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, coachSection, coachSection2, hrSection, hrSection2);
             break;
     }
 }
@@ -125,14 +130,20 @@ function getAccountDetails() {
        public/private/else) then with the requested value from the account
        displays certain fields and sets it's required permission in the current
        contact form */
-    var accountObject = getAttribute('parentcustomerid').getValue(), // getAttribute From contactFormScript.js
+    var accountObject = getAttributeObj('parentcustomerid').getValue(), // getAttributeObj From contactFormScript.js
         clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
         ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
-        odataSetName = "AccountSet", //This is found when exporting 
-        studentSection = getSection('general', 'student_section'),
-        teacherSection = getSection('general', 'teacher_section'),
-        coachSection = getSection('general', 'coach_section'),
-        hrSection = getSection('general', 'hr_section');
+        odataSetName = "AccountSet", //This is found when exporting
+        // Form Tabs/Sections
+        studentSection = getSection('student_tab', 'student_section'),
+        studentSection2 = getSection('student_tab', 'student_section2'),
+        studentSection3 = getSection('student_tab2', 'student_section3'),
+        teacherSection = getSection('teacher_tab', 'teacher_section'),
+        teacherSection2 = getSection('teacher_tab', 'teacher_section2'),
+        coachSection = getSection('coach_tab', 'coach_section'),
+        coachSection2 = getSection('coach_tab', 'coach_section2'),
+        hrSection = getSection('hr_tab', 'hr_section'),
+        hrSection2 = getSection('hr_tab', 'hr_section2');
     if (!accountObject) {
         Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve the accountObject.', 'ERROR');
         return;
@@ -171,21 +182,24 @@ clic en ' + obj.Name + ' (abajo).', 'ERROR');
                         case 100000000: // Private if account is a private school
                             enableField('new_contacttypeprivate');
                             disableField('new_contacttypepublic');
-                            if (getAttribute('new_contacttypeprivate').getValue() != null) {
-                                switch (getAttribute('new_contacttypeprivate').getValue()) {
+                            if (getAttributeObj('new_contacttypeprivate').getValue() != null) {
+                                switch (getAttributeObj('new_contacttypeprivate').getValue()) {
                                     case 100000016: // Teacher
                                         //If a teacher display teacher section, hide not relevant
-                                        sectionsHide(studentSection, coachSection, hrSection);
+                                        sectionsHide(studentSection, studentSection2, studentSection3, coachSection, coachSection2, hrSection, hrSection2);
                                         sectionShow(teacherSection);
+                                        sectionShow(teacherSection2);
+                                        enableField('new_subjectstaught');
                                         subjectsTaught();
                                         break;
                                     case 100000003: // Coach
                                         // if a coach, show coach section, hide not relevant
-                                        sectionsHide(studentSection, teacherSection, hrSection);
+                                        sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, hrSection, hrSection2);
                                         sectionShow(coachSection);
+                                        sectionShow(coachSection2);
                                         break;
                                     default:
-                                        sectionsHide(studentSection, teacherSection, coachSection, hrSection);
+                                        sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, coachSection, coachSection2, hrSection, hrSection2);
                                         break;
                                 }
                             }
@@ -193,26 +207,31 @@ clic en ' + obj.Name + ' (abajo).', 'ERROR');
                         case 100000001: // Public if account is a public school
                             enableField('new_contacttypepublic');
                             disableField('new_contacttypeprivate');
-                            if (getAttribute('new_contacttypepublic').getValue() != null) {
-                                switch (getAttribute('new_contacttypepublic').getValue()) {
+                            if (getAttributeObj('new_contacttypepublic').getValue() != null) {
+                                switch (getAttributeObj('new_contacttypepublic').getValue()) {
                                     case 100000026: //Teacher
                                         //If a teacher display teacher section, hide not relevant
-                                        sectionsHide(studentSection, coachSection, hrSection);
+                                        sectionsHide(studentSection, studentSection2, studentSection3, coachSection, coachSection2, hrSection, hrSection2);
                                         sectionShow(teacherSection);
+                                        sectionShow(teacherSection2);
+                                        enableField('new_subjectstaught');
                                         subjectsTaught();
                                         break;
                                     case 100000022: //Student
                                         //If the contact type is a student, display the student section hide not relevant
-                                        sectionsHide(teacherSection, coachSection, hrSection);
+                                        sectionsHide(teacherSection, teacherSection2, coachSection, coachSection2, hrSection, hrSection2);
                                         sectionShow(studentSection);
+                                        sectionShow(studentSection2);
+                                        sectionShow(studentSection3);
                                         break;
                                     case 100000004: // Coach
                                         // if a coach, show coach section, hide not relevant
-                                        sectionsHide(studentSection, teacherSection, hrSection);
+                                        sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, hrSection, hrSection2);
                                         sectionShow(coachSection);
+                                        sectionShow(coachSection2);
                                         break;
                                     default:
-                                        sectionsHide(studentSection, teacherSection, coachSection, hrSection);
+                                        sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, coachSection, coachSection2, hrSection, hrSection2);
                                         break;
                                 }
                             }

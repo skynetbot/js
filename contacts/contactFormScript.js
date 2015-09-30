@@ -145,7 +145,7 @@ function getAccountDetails() {
         hrSection = getSection('hr_tab', 'hr_section'),
         hrSection2 = getSection('hr_tab', 'hr_section2');
     if (!accountObject) {
-        Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve the accountObject.', 'ERROR');
+        Xrm.Page.ui.setFormNotification('Este contacto no tiene cuenta asignada. Este mensaje desaparecera al refrescar la p\u00E1gina despu\u00E9s de incluir y salvar toda la informaci\u00F3n requerida.', 'ERROR');
         return;
     } else {
         var accountObjectId = accountObject[0].id; //get account id

@@ -5,6 +5,7 @@
         <meta name="description" content="">
         <meta name="keywords" content="">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
         <link href="https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.css" rel="stylesheet" type="text/css">
         <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script>
@@ -24,11 +25,20 @@
                 // returns an object with .top and .left properties
                 var navHomeY = nav.offset().top;
                 // track whether or not the menu is currently floating
+                // only modify the positioning of #nav when
                 var isFixed = false;
+                // apply a scroll event listener that will be triggered whenever the page is scrolled
+                // reference to the window
                 var $w = $(window);
                 $w.scroll(function() {
+                    // get the current vertical scrolling position by using the scrollTop method on the window
                     var scrollTop = $w.scrollTop();
                     var shouldBeFixed = scrollTop > navHomeY;
+                    /*
+                     * check this value against the menu's home position, to determine if the menu should be floating
+                     * Taking our two boolean values, shouldBeFixed and isFixed, we take action if the current state 
+                     * doesn't match the needed state. If the menu should be fixed and it isn't, here's what we do:
+                     */
                     if (shouldBeFixed && !isFixed) {
                         nav.css({
                             position: 'fixed',
@@ -38,6 +48,23 @@
                         });
                         isFixed = true;
                     }
+                    /*
+                     * We update the menu's CSS, applying the uber-important position: fixed and setting top: 0 so 
+                     * that the menu will stick to the top of the window. Additionally, we update the horizontal 
+                     * position (via left) to match the exact horizontal position where it was. This ensures that 
+                     * the menu doesn't jump horizontally when we start floating it. Likewise, we explicity set 
+                     * the width. This is because inline block elements such as div automatically fill the full 
+                     * available width when they are positioned within the page's layout flow. However, when 
+                     * they have position: fixed or position: absolute applied, they only expand horizontally 
+                     * to fit their content. Thus, we have to explicitly set width to ensure that the width 
+                     * doesn't suddenly change. Finally, we update the isFixed flag to record the menu's new state.
+                     * 
+                     * In the second branch, we check for the opposite situation. If the menu shouldn't by 
+                     * floating and it is, we disable position: fixed by resetting position to the default 
+                     * value, static:
+                     * 
+                     * update the isFixed flag to record the fact that the menu is no longer floating
+                     */
                     else if (!shouldBeFixed && isFixed)
                     {
                         nav.css({
@@ -66,7 +93,8 @@
                 font-size: 1em;
             }
             body {
-                //max-width: 83em;
+                max-width: 83em;
+                min-width: 74em;
                 margin: 0 auto;
                 background-color: #ffffff;
                 font-family: 'Open Sans', sans-serif;
@@ -74,19 +102,62 @@
             }
             h1 {
                 margin: 0;
-                font-size: 3em;
+                font-size: 2em;
                 /* background-color: #424242; */
                 padding-bottom: 1em;
                 padding-top: 1em;
                 /* color: #fff; */
             }
+            code {
+                background-color: #eeeeee;
+                padding: 0 .1em;
+                border-radius: 2px;
+                font-family: 'Source Code Pro';
+                font-size: .9em;
+            }
+            pre {
+                border-radius: 2px;
+                background-color: #eeeeee;
+                border: 1px solid #bdbdbd;
+            }
             nav {
+                font-size: .8em;
+            }
+            nav ul {
+                list-style: none;
+                /* border: 1px solid #f0f0f0; */
+                background-color: #f5f5f5;
+                border-radius: 2px;
+                width: 13.4em;
+                padding: 0 .4em;
+            }
+            nav ul li {
+                padding: 4px 0;
+            }
+            nav ul li a {
+            }
+            a:link,
+            a:visited {
+                color: #2196f3;
+                text-decoration: none;
+            }
+            a:hover,
+            a:active {
+                color: #0d47a1;
             }
             br.clearLeft {
                 clear: left;
             }
             #navWrap {
-                height: 30px;
+                height: 100%;
+                position: absolute;
+                width: 11em;
+                margin: 0 10px;
+            }
+            #nav {
+                margin: 20px 0;
+                /*border: 1px solid #000;
+                padding: 0 10px;*/
             }
             .center-text {
                 text-align: center;
@@ -94,9 +165,15 @@
             .align-left {
                 text-align: left;
             }
+            .float-right {
+                float: left;
+            }
+            .clearfix {
+                clear: both;
+            }
             .content {
                 margin: auto;
-                width: 600px;
+                width: 48.18000048184em;
                 padding: 0px 0px;
             }
         </style>
@@ -105,244 +182,303 @@
         <div class="center-text">
             <header>
                 <div class="content align-left">
-                <h2>Descripción</h2>
-                <p>
-                    Como propósito en asistir a Santillana a mejorar o implementar el proceso de 
-                    estandarización de escritura de código al momento de desarrollar software.  
-                    El propósito de esta propuesta es para mejorar los procesos que ya estén en 
-                    pie como también poner a Santillana en una mejor posición al momento de adquirir 
-                    futuros contratos con desarrolladores de software.  El resultado de esta 
-                    propuesta será el Manual de Políticas y Procesos al Escribir Código en el 
-                    Desarrollo de Software en acomodo para Santillana en su ambiente corporativo, 
-                    histórico y políticas existentes.
-                </p>
-                <p>
-                    La forma general la cual este Manual es usado es uno el cual define en totalidad 
-                    el proceso de escritura de código en Santillana.  Cada nuevo documento 
-                    implementara las prácticas descritas por este Manual estandarizadas para 
-                    Santillana.  El resultado de la implementación de las Políticas y Procesos 
-                    al Escribir Código en el Desarrollo de Software reduce efectivamente el tiempo 
-                    de adaptación de un desarrollador como también mejora la comunicación entre 
-                    desarrolladores en las siguientes áreas:
-                </p>
-                <ul>
-                    <li>Documentación</li>
-                    <li>Estructuración estándar</li>
-                    <li>Legibilidad</li>
-                    <li>Claridad</li>
-                    <li>Planes de mejora</li>
-                    <li>Resolución de problemas y bugs</li>
-                </ul>
+                    <h2>Descripción</h2>
+                    <p>
+                        Como propósito en asistir a Santillana a mejorar o implementar el proceso de 
+                        estandarización de escritura de código al momento de desarrollar software.  
+                        El propósito de esta propuesta es para mejorar los procesos que ya estén en 
+                        pie como también poner a Santillana en una mejor posición al momento de adquirir 
+                        futuros contratos con desarrolladores de software.  El resultado de esta 
+                        propuesta será el Manual de Políticas y Procesos al Escribir Código en el 
+                        Desarrollo de Software en acomodo para Santillana en su ambiente corporativo, 
+                        histórico y políticas existentes.
+                    </p>
+                    <p>
+                        La forma general la cual este Manual es usado es uno el cual define en totalidad 
+                        el proceso de escritura de código en Santillana.  Cada nuevo documento 
+                        implementara las prácticas descritas por este Manual estandarizadas para 
+                        Santillana.  El resultado de la implementación de las Políticas y Procesos 
+                        al Escribir Código en el Desarrollo de Software reduce efectivamente el tiempo 
+                        de adaptación de un desarrollador como también mejora la comunicación entre 
+                        desarrolladores en las siguientes áreas:
+                    </p>
+                    <ul>
+                        <li>Documentación</li>
+                        <li>Estructuración estándar</li>
+                        <li>Legibilidad</li>
+                        <li>Claridad</li>
+                        <li>Planes de mejora</li>
+                        <li>Resolución de problemas y bugs</li>
+                    </ul>
+                    <h1>MANUAL DE POLITICAS Y PROCESOS AL ESCRIBIR CODIGO EN EL DESARROLLO DE SOFTWARE</h1>
                 </div>
             </header>
             <div id="navWrap">
                 <div id="nav">
-                    <nav id="content-menu" class="align-left">
+                    <nav id="content-menu" class="align-left content clearfix">
                         <h2>Contenido</h2>
                             <ul>
                                 <li><a href="#spacing">Sangría y espacios en blanco</a></li>
-                                <li><a href="#">Operadores</a></li>
-                                <li><a href="#">Estructuras de control</a></li>
-                                <li><a href="#">Extensión de líneas</a></li>
-                                <li><a href="#">Llamada de funciones</a></li>
-                                <li><a href="#">Declaración de funciones</a></li>
-                                <li><a href="#">Constructores</a></li>
-                                <li><a href="#">Arreglos</a></li>
-                                <li><a href="#">Concatenaciones</a></li>
-                                <li><a href="#">Definición de variables</a></li>
-                                <li><a href="#">Documentación</a></li>
-                                <li><a href="#">Compiladores, minimizadores de código</a></li>
+                                <li><a href="#operators">Operadores</a></li>
+                                <li><a href="#control">Estructuras de control</a></li>
+                                <li><a href="#lines">Extensión de líneas</a></li>
+                                <li><a href="#functions">Llamada de funciones</a></li>
+                                <li><a href="#declarations">Declaración de funciones</a></li>
+                                <li><a href="#constructors">Constructores</a></li>
+                                <li><a href="#arrays">Arreglos</a></li>
+                                <li><a href="#concatenations">Concatenaciones</a></li>
+                                <li><a href="#variables">Definición de variables</a></li>
+                                <li><a href="#documentation">Documentación</a></li>
+                                <li><a href="#compilers">Compiladores</a></li>
                             </ul>
                     </nav>
                     <br class="clearLeft">
                 </div>
             </div>
             <main>
-                <div class="align-left">
-                <h1>MANUAL DE POLITICAS Y PROCESOS AL ESCRIBIR CODIGO EN EL DESARROLLO DE SOFTWARE</h1>
-                <h2>Introducción</h2>
-                <p>
-                    Este documento define los estándares de escritura de código en el desarrollo de 
-                    software.  El contenido en este manual está actualizado hasta la fecha del 6 de 
-                    octubre del 2015.  Las practicas de uso serán aplicadas al lenguaje en el cual 
-                    desarrolla independientemente del lenguaje que se detalle en los ejemplos.
-                </p>
+                <div class="content align-left">
+                    <h2>Introducción</h2>
+                    <p>
+                        Este documento define los estándares de escritura de código en el desarrollo de 
+                        software.  El contenido en este manual está actualizado hasta la fecha del 6 de 
+                        octubre del 2015.  Las practicas de uso serán aplicadas al lenguaje en el cual 
+                        desarrolla independientemente del lenguaje que se detalle en los ejemplos.
+                    </p>
                     <section id="spacing">
                         <h3>Sangría y espacios en blanco</h3>
                         <p>
-                            Usa sangría de 4 espacios o tabulador. Las líneas no deben finalizar en espacio.
-                            Todo documento debe terminar en línea nueva (\n) no en retorno (enter \r).
-                            Todos los documentos de texto deben terminar en un solo new line (\n).</p>
-                        <h3>Operadores</h3>
-                        <p>
-                            Todos los operadores binarios como +, -, =, !=, ==, >, etcétera llevaran un 
-                            espacio antes y después del operador. Por ejemplo, foo = bar; en vez de 
-                            <code>foo=bar;</code>.
-                            Los operadores unarios no llevaran espacio entre el operador y la variable.
-                            Por ejemplo, <code>++foo</code>.
+                            Usa sangría de 4 espacios o tabulador.  Las líneas no deben finalizar en 
+                            espacio. Todo documento debe terminar en línea nueva (\n) no en retorno 
+                            (enter \r). Todos los documentos de texto deben terminar en un solo new 
+                            line (\n).
                         </p>
                     </section>
-                <h3>Estructuras de control</h3>
-                <p>Deben tener un espacio entre la palabra clave de control y el paréntesis de
-                    apertura. Usa llaves hasta en situaciones las cuales no sean técnicamente 
-                    necesarias. La llave de apertura debe estar colocada en la misma 
-                    línea de la declaración. La llave de cierre debe estar colocada con 
-                    sangría al mismo nivel de la declaración de apertura.
-                </p>
-                <p>
-                    Declaracion if:
-                    <pre><code>
-                        if (foo == bar) {
-                            return;
-                        } else if (foo != bar) {
-                            return;
-                        } else {
-                            return;
-                        }
-                    </code></pre>
-                    Declaracion switch:
-                    <code>
-                        Switch (foo) {
-                    </code>
-                </p>
+                    <section id="operators">
+                        <h3>Operadores</h3>
+                        <p>
+                            Todos los operadores binarios como <code>+</code>, <code>-</code>,
+                            <code>=</code>, <code>!=</code>, <code>==</code>, <code>></code>, etcétera 
+                            llevaran un espacio antes y después del operador. Por ejemplo, 
+                            <code>foo = bar;</code> en vez de <code>foo=bar;</code>. Los operadores 
+                            unarios no llevaran espacio entre el operador y la variable. Por ejemplo,
+                            <code>++foo;</code>.
+                        </p>
+                    </section>
+                    <section id="control">
+                        <h3>Estructuras de control</h3>
+                        <p>
+                            Deben tener un espacio entre la palabra clave de control y el paréntesis de 
+                            apertura. Usa llaves hasta en situaciones las cuales no sean técnicamente 
+                            necesarias. La llave de apertura debe estar colocada en la misma línea de 
+                            la declaración. La llave de cierre debe estar colocada con sangría al mismo 
+                            nivel de la declaración de apertura.
+                        </p>
+                        <p>
+                            Declaración if:
+                        </p>
+                        <pre><code>
+        if (foo == bar) {
+            return;
+        } else if (foo != bar) {
+            return;
+        } else {
+            return;
+        }
+                        </code></pre>
+                        <p>
+                            Declaración switch:
+                        </p>
+                        <pre><code>
+        Switch (foo) {
+            case 1:
+                bar1;
+                break;
+            default:
+                break;
+        }
+                        </code></pre>
+                        <p>
+                            Declaración do:
+                        </p>
+                        <pre><code>
+        do {
+            foo;
+        } while (bar);
+                        </code></pre>
+                    </section>
+                    <section id="lines">
+                        <h3>Extensión de líneas</h3>
+                        <p>
+                            En general, las líneas no deben exceder mas de 80 caracteres. Solo es 
+                            permitido exceder este numero en nombres largos de funciones, 
+                            definiciones de funciones y clases, declaraciones de variables, etcétera.
+                        </p>
+                        <pre><code>
+            if (contactFormSection2StudentAgeFieldText ==
+        accountFormContactsSectionStudentGradeAgeText) {
+                foo;
+                bar;
+            }
+                        </code></pre>
+                        <p>
+                            Condiciones no deben estar acortadas en líneas múltiples.
+                        </p>
+                        <pre><code>
+      if ((((typeof key != 'undefined') && user.uid != null) && key == user.uid) ||
+  ((typeof user.cache) ? user.cache : 'undefined') == ip_address() || (typeof value !=
+  'undefined') && value >= time()) {
+          return;
+      }
+                        </code></pre>
+                        <p>
+                            En todo caso es practica recomendada preparar las condiciones en separado
+                            lo cual permite mejor documentación.
+                        </p>
+                        <pre><code>
+  // La llave es solo valida si el id del usuario iguala la llave
+  // de lo contrario cualquier usuario tendría acceder a otro usuario
+  isValidUser = (((typeof key != 'undefined') && user.uid != null) && key == user.uid);
+  
+  // IP debe igualar al cache del usuario para prevenir usuarios ilegítimos
+  isValidCache = ((typeof user.cache) ? user.cache : 'undefined') == ip_address();
+  
+  if (isValidUser || ifValidCache) {
+  }
+                        </code></pre>
+                    </section>
+                    <section id="functions">
+                        <h3>Llamada de funciones</h3>
+                        <p>
+                            Las funciones deben ser llamadas sin espacio entre el nombre de la 
+                            función, el paréntesis de apertura y el primer parámetro y su coma;
+                            espacios entre los parámetros después de la coma y sin espacio entre
+                            el ultimo parámetro el paréntesis de cierre y el punto y coma.
+                        </p>
+                        <pre><code>
+        variable = foo(bar, bazz, quuz);
+                        </code></pre>
+                        <p>
+                            En caso de un bloque de llamadas incrementar la cantidad de espacios
+                            para mejorar legibilidad
+                        </p>
+                        <pre><code>
+        variableFormAccountText = foo(bar);
+        variable                = foo(bazz);
+                        </code></pre>
+                    </section>
+                    <section id="declarations">
+                        <h3>Declaración de funciones</h3>
+                        <pre><code>
+        function(argument) {
+            variable['text'] = 'Hola Mundo!';
+            return variable[argument];
+        }
+                        </code></pre>
+                    </section>
+                    <section id="constructors">
+                        <h3>Constructores</h3>
+                        <pre><code>
+        foo = 'newClass';
+        foo = new newClass();
+        foo = new newClass(bar, quuz);
+                        </code></pre>
+                    </section>
+                    <section id="arrays">
+                        <h3>Arreglos</h3>
+                        <pre><code>
+        Arreglos
+        unArreglo = ['foo', 'bar' = 'quuz'];
+        unArreglo = [
+            'foo',
+            'bar' = 'quuz'
+        ];
+                        </code></pre>
+                    </section>
+                    <section id="concatenations">
+                        <h3>Concatenaciones</h3>
+                        <pre><code>
+        string = 'foo' . bar;
+        string = foo . 'bar';
+        string = foo() . 'bar';
+        string = 'foo' . 'bar';
+                        </code></pre>
+                    </section>
+                    <section id="variables">
+                        <h3>Definición de variables</h3>
+                        <p>
+                            Las variables serán definidas con un nombre descriptivo que haga
+                            referencia a su asignatura. Al utilizar múltiples palabras para
+                            una variable debe separarlas utilizando la tecla de subrayar o
+                            capitalizando la primera letra de la siguiente palaba. Mantenga
+                            uniformidad al utilizar el método que escoja (no utilice ambos).
+                            Variables globales deben ser capitalizadas y sus palabras deben
+                            ser separadas con la tecla de subrayar.
+                        </p>
+                        <pre><code>
+        contactValue = 'foo'; // ESTO NO
+        
+        contactValue = 'foo'; // NO
+        contact_text = 'bar'; // NO USAR MULTIPLES METODOS
+        
+        contactFormTab1Section1NameFieldValue = 'foo'; // SI
+        contactFormTab1Section1NameFieldText  = 'bar'; // SI
+        
+        DEFINE_BACKGROUND = '#FFFFFF'; // GLOBALES
+                        </code></pre>
+                    </section>
+                    <section id="documentation">
+                        <h3>Documentación</h3>
+                        <p>
+                            Cada archivo debe incluir documentación al respecto de el propósito
+                            del mismo al igual como una descripción de la intención del código
+                            y sus funciones.  Problemas en funcionalidad deben estar documentados
+                            en el archivo así como también funciones y métodos a implementarse.
+                        </p>
+                        <p>
+                            Cada función estará debidamente documentada antes de su declaración
+                            con la descripción de su propósito. Métodos a implementarse deben
+                            estar documentados con las palabras "TODO" en caso del código
+                            estar incompleto en su función.<br>
+                            Comentar en línea cuando es necesario.<br>
+                            Insertara un espacio entre la declaración de comentario y el texto.
+                        </p>
+                        <pre><code>
+        /* Este documento utiliza funciones descritas
+         * en el SDK versión 1.0. Para referencia visite
+         * http://direccion.org/carpeta
+         *
+         * Este archivo contiene funciones las cuales
+         * interactúan con la forma de account
+         * específicamente en el manejo de campos a ser
+         * mostrados según se cumplan ciertas características
+         */
+        /* getAccountDetails() llama los datos de la cuenta
+         * relativa al contacto y guarda sus propiedades
+         * en un objeto. La forma entonces interactúa
+         * de acuerdo al valor establecido por valores
+         * del objeto.
+         */
+         
+        function getAccountDetails(argument1, argument2) {
+            // TODO escribir código que asigna al objeto
+            
+            foo['argument1'] = object.value;
+            // Devuelve argumento2 resultado de ...
+            return argument2;
+        }
+                        </code></pre>
+                    </section>
+                    <section id="compilers">
+                        <h3>Compiladores, minimizadores de código</h3>
+                        <p>
+                            El uso de compiladores no aporta ningún beneficio de desempeño en código
+                            el cual se interpreta directamente y no requiere ejecución de binario.
+                            El tamaño de un archivo de código es mínimo comparado con el ancho de
+                            banda promedio. Uso de tales herramientas esta descartado.
+                        </p>
+                    </section>
                 </div>
             </main>
         </div>
     </body>
 </html>
-
-
-
-
-
-
-
-
- 
-Sangría y espacios en blanco
-Usa sangría de 4 espacios o tabulador.  Las líneas no deben finalizar en espacio.  Todo documento debe terminar en línea nueva (\n) no en retorno (enter \r).  Todos los documentos de texto deben terminar en un solo new line (\n).
-
-Operadores
-Todos los operadores binarios como +, -, =, !=, ==, >, etcétera llevaran un espacio antes y después del operador. Por ejemplo, foo = bar; en vez de foo=bar;.
-Los operadores unarios no llevaran espacio entre el operador y la variable. Por ejemplo, ++foo.
-
-Estructuras de control
-Deben tener un espacio entre la palabra clave de control y el paréntesis de apertura.  Usa llaves hasta en situaciones las cuales no sean técnicamente necesarias.  La llave de apertura debe estar colocada en la misma línea de la declaración.  La llave de cierre debe estar colocada con sangría al mismo nivel de la declaración de apertura.
-Declaración if:
-if (foo == bar) {
-	    return;
-} else if (foo != bar) {
-    return;
-} else {
-    return;
-}
-Declaración switch:
-Switch (foo) {
-    case 1:
-        bar1;
-        break;
-    default:
-        break;
-}
-Declaración do:
-do {
-    foo;
-} while (bar);
-
-Extensión de líneas
-En general, las líneas no deben exceder mas de 80 caracteres. Solo es permitido exceder este numero en nombres largos de funciones, definiciones de funciones y clases, declaraciones de variables, etcétera.
-if (contactFormSection2StudentAgeFieldText ==
-accountFormContactsSectionStudentGradeAgeText) {
-        foo;
-        bar;
-    }
-Condiciones no deben estar acortadas en líneas múltiples.
-if ((((typeof key != 'undefined') && user.uid != null) && key == user.uid) ||
-((typeof user.cache) ? user.cache : 'undefined') == ip_address() || (typeof value != 
-'undefined') && value >= time()) {
-        return;
-}
-En todo caso es practica recomendada preparar las condiciones en separado lo cual permite mejor documentación.
-// La llave es solo valida si el id del usuario iguala la llave
-// de lo contrario cualquier usuario tendría acceder a otro usuario
-isValidUser = (((typeof key != 'undefined') && user.uid != null) && key == user.uid);
-
-// IP debe igualar al cache del usuario para prevenir usuarios ilegítimos
-isValidCache = ((typeof user.cache) ? user.cache : 'undefined') == ip_address();
-
-if (isValidUser || ifValidCache) {
-}
-
-Llamada de funciones
-Las funciones deben ser llamadas sin espacio entre el nombre de la función, el paréntesis de apertura y el primer parámetro y su coma; espacios entre los parámetros después de la coma y sin espacio entre el ultimo parámetro el paréntesis de cierre y el punto y coma.
-variable = foo(bar, bazz, quuz);
-En caso de un bloque de llamadas incrementar la cantidad de espacios para mejorar legibilidad
-variableFormAccountText = foo(bar);
-variable                = foo(bazz);
-
-Declaración de funciones
-function(argument) {
-    variable['text'] = 'Hola Mundo!';
-    return variable[argument];
-}
-
-Constructores
-foo = 'newClass';
-foo = new newClass();
-foo = new newClass(bar, quuz);
-
-Arreglos
-unArreglo = ['foo', 'bar' = 'quuz'];
-unArreglo = [
-    'foo',
-    'bar' = 'quuz'
-];
-
-Concatenaciones
-string = 'foo' . bar;
-string = foo . 'bar';
-string = foo() . 'bar';
-string = 'foo' . 'bar';
-
-Definición de variables
-Las variables serán definidas con un nombre descriptivo que haga referencia a su asignatura.  Al utilizar múltiples palabras para una variable debe separarlas utilizando la tecla de subrayar o capitalizando la primera letra de la siguiente palaba.  Mantenga uniformidad al utilizar el método que escoja (no utilice ambos).  Variables globales deben ser capitalizadas y sus palabras deben ser separadas con la tecla de subrayar.
-contactValue = 'foo'; // ESTO NO
-
-contactValue = 'foo'; // NO
-contact_text = 'bar'; // NO USAR MULTIPLES METODOS
-
-contactFormTab1Section1NameFieldValue = 'foo'; // SI
-contactFormTab1Section1NameFieldText  = 'bar'; // SI
-
-DEFINE_BACKGROUND = '#FFFFFF'; // GLOBALES
-
-Documentación
-Cada archivo debe incluir documentación al respecto de el propósito del mismo al igual como una descripción de la intención del código y sus funciones.  Problemas en funcionalidad deben estar documentados en el archivo así como también funciones y métodos a implementarse.
-Cada función estará debidamente documentada antes de su declaración con la descripción de su propósito.  Métodos a implementarse deben estar documentados con las palabras "TODO" en caso del código estar incompleto en su función.
-Comentar en línea cuando es necesario.
-Insertara un espacio entre la declaración de comentario y el texto.
-/* Este documento utiliza funciones descritas
- * en el SDK versión 1.0. Para referencia visite
- * http://direccion.org/carpeta
- *
- * Este archivo contiene funciones las cuales
- * interactúan con la forma de account
- * específicamente en el manejo de campos a ser
- * mostrados según se cumplan ciertas características
- */
-/* getAccountDetails() llama los datos de la cuenta
- * relativa al contacto y guarda sus propiedades
- * en un objeto. La forma entonces interactúa
- * de acuerdo al valor establecido por valores
- * del objeto.
- */
-function getAccountDetails(argument1, argument2) {
-    // TODO escribir código que asigna al objeto
-    
-    foo['argument1'] = object.value;
-    // Devuelve argumento2 resultado de ...
-    return argument2;
-}
-Compiladores, minimizadores de código
-El uso de compiladores no aporta ningún beneficio de desempeño en código el cual se interpreta directamente y no requiere ejecución de binario.  El tamaño de un archivo de código es mínimo comparado con el ancho de banda promedio.  Uso de tales herramientas esta descartado.
-

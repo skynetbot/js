@@ -4,8 +4,51 @@
         <meta charset="utf-8">
         <meta name="description" content="">
         <meta name="keywords" content="">
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
         <link href="https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.css" rel="stylesheet" type="text/css">
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+            //<![CDATA[ 
+            /*
+             * This code interacts with the navigation menu to make it float top
+             *
+             * Wrap everything in a document.ready handler via $(function() { cpde to run });
+             * This then will run when the document is ready for manipulation.
+             *
+             */
+            $(function() {
+                // Stick the #nav to the top of the window
+                // create a reference to the menu since we'll need to reference it repeatedly
+                var nav = $('#nav');
+                // get the menu's position relative to the overall window
+                // returns an object with .top and .left properties
+                var navHomeY = nav.offset().top;
+                // track whether or not the menu is currently floating
+                var isFixed = false;
+                var $w = $(window);
+                $w.scroll(function() {
+                    var scrollTop = $w.scrollTop();
+                    var shouldBeFixed = scrollTop > navHomeY;
+                    if (shouldBeFixed && !isFixed) {
+                        nav.css({
+                            position: 'fixed',
+                            top: 0,
+                            left: nav.offset().left,
+                            width: nav.width()
+                        });
+                        isFixed = true;
+                    }
+                    else if (!shouldBeFixed && isFixed)
+                    {
+                        nav.css({
+                            position: 'static'
+                        });
+                        isFixed = false;
+                    }
+                });
+            });
+            //]]>
+        </script>
         <title>MANUAL DE POLITICAS Y PROCESOS AL ESCRIBIR CODIGO EN EL DESARROLLO DE SOFTWARE</title>
         <style>
             html, body {
@@ -23,7 +66,7 @@
                 font-size: 1em;
             }
             body {
-                max-width: 83em;
+                //max-width: 83em;
                 margin: 0 auto;
                 background-color: #ffffff;
                 font-family: 'Open Sans', sans-serif;
@@ -37,20 +80,31 @@
                 padding-top: 1em;
                 /* color: #fff; */
             }
+            nav {
+            }
+            br.clearLeft {
+                clear: left;
+            }
+            #navWrap {
+                height: 30px;
+            }
             .center-text {
                 text-align: center;
             }
             .align-left {
                 text-align: left;
+            }
+            .content {
+                margin: auto;
                 width: 600px;
-                padding: 0px 20px;
+                padding: 0px 0px;
             }
         </style>
     </head>
     <body>
         <div class="center-text">
             <header>
-                <div class="align-left">
+                <div class="content align-left">
                 <h2>Descripción</h2>
                 <p>
                     Como propósito en asistir a Santillana a mejorar o implementar el proceso de 
@@ -81,6 +135,28 @@
                 </ul>
                 </div>
             </header>
+            <div id="navWrap">
+                <div id="nav">
+                    <nav id="content-menu" class="align-left">
+                        <h2>Contenido</h2>
+                            <ul>
+                                <li><a href="#spacing">Sangría y espacios en blanco</a></li>
+                                <li><a href="#">Operadores</a></li>
+                                <li><a href="#">Estructuras de control</a></li>
+                                <li><a href="#">Extensión de líneas</a></li>
+                                <li><a href="#">Llamada de funciones</a></li>
+                                <li><a href="#">Declaración de funciones</a></li>
+                                <li><a href="#">Constructores</a></li>
+                                <li><a href="#">Arreglos</a></li>
+                                <li><a href="#">Concatenaciones</a></li>
+                                <li><a href="#">Definición de variables</a></li>
+                                <li><a href="#">Documentación</a></li>
+                                <li><a href="#">Compiladores, minimizadores de código</a></li>
+                            </ul>
+                    </nav>
+                    <br class="clearLeft">
+                </div>
+            </div>
             <main>
                 <div class="align-left">
                 <h1>MANUAL DE POLITICAS Y PROCESOS AL ESCRIBIR CODIGO EN EL DESARROLLO DE SOFTWARE</h1>
@@ -91,34 +167,21 @@
                     octubre del 2015.  Las practicas de uso serán aplicadas al lenguaje en el cual 
                     desarrolla independientemente del lenguaje que se detalle en los ejemplos.
                 </p>
-                <h2>Contenido</h2>
-                    <ul>
-                        <li><a href="#">Sangría y espacios en blanco</a></li>
-                        <li><a href="#">Operadores</a></li>
-                        <li><a href="#">Estructuras de control</a></li>
-                        <li><a href="#">Extensión de líneas</a></li>
-                        <li><a href="#">Llamada de funciones</a></li>
-                        <li><a href="#">Declaración de funciones</a></li>
-                        <li><a href="#">Constructores</a></li>
-                        <li><a href="#">Arreglos</a></li>
-                        <li><a href="#">Concatenaciones</a></li>
-                        <li><a href="#">Definición de variables</a></li>
-                        <li><a href="#">Documentación</a></li>
-                        <li><a href="#">Compiladores, minimizadores de código</a></li>
-                    </ul>
-                <h3>Sangría y espacios en blanco</h3>
-                <p>
-                    Usa sangría de 4 espacios o tabulador. Las líneas no deben finalizar en espacio.
-                    Todo documento debe terminar en línea nueva (\n) no en retorno (enter \r).
-                    Todos los documentos de texto deben terminar en un solo new line (\n).</p>
-                <h3>Operadores</h3>
-                <p>
-                    Todos los operadores binarios como +, -, =, !=, ==, >, etcétera llevaran un 
-                    espacio antes y después del operador. Por ejemplo, foo = bar; en vez de 
-                    <code>foo=bar;</code>.
-                    Los operadores unarios no llevaran espacio entre el operador y la variable.
-                    Por ejemplo, <code>++foo</code>.
-                </p>
+                    <section id="spacing">
+                        <h3>Sangría y espacios en blanco</h3>
+                        <p>
+                            Usa sangría de 4 espacios o tabulador. Las líneas no deben finalizar en espacio.
+                            Todo documento debe terminar en línea nueva (\n) no en retorno (enter \r).
+                            Todos los documentos de texto deben terminar en un solo new line (\n).</p>
+                        <h3>Operadores</h3>
+                        <p>
+                            Todos los operadores binarios como +, -, =, !=, ==, >, etcétera llevaran un 
+                            espacio antes y después del operador. Por ejemplo, foo = bar; en vez de 
+                            <code>foo=bar;</code>.
+                            Los operadores unarios no llevaran espacio entre el operador y la variable.
+                            Por ejemplo, <code>++foo</code>.
+                        </p>
+                    </section>
                 <h3>Estructuras de control</h3>
                 <p>Deben tener un espacio entre la palabra clave de control y el paréntesis de
                     apertura. Usa llaves hasta en situaciones las cuales no sean técnicamente 

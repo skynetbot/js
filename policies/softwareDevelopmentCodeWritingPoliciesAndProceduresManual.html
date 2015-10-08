@@ -2,86 +2,149 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+        <link href="https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.css" rel="stylesheet" type="text/css">
         <title>MANUAL DE POLITICAS Y PROCESOS AL ESCRIBIR CODIGO EN EL DESARROLLO DE SOFTWARE</title>
+        <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+            }
+            html { display: table; /* tosetpageverticalalign */ }
+            body {
+                display: table-cell; /* tosetpageverticalalign */
+                vertical-align: middle; /* tosetpageverticalalign */
+                text-rendering: optimizelegibility;
+            }
+            html, body { margin: 0; padding: 0; }
+            html {
+                font-size: 1em;
+            }
+            body {
+                max-width: 83em;
+                margin: 0 auto;
+                background-color: #ffffff;
+                font-family: 'Open Sans', sans-serif;
+                color: #474747;
+            }
+            h1 {
+                margin: 0;
+                font-size: 3em;
+                /* background-color: #424242; */
+                padding-bottom: 1em;
+                padding-top: 1em;
+                /* color: #fff; */
+            }
+            .center-text {
+                text-align: center;
+            }
+            .align-left {
+                text-align: left;
+                width: 600px;
+                padding: 0px 20px;
+            }
+        </style>
     </head>
     <body>
-        <header>
-            <h2>Descripción</h2>
-            <p>
-                Como propósito en asistir a Santillana a mejorar o implementar el proceso de
-                estandarización de escritura de código al momento de desarrollar software.
-                El propósito de esta propuesta es para mejorar los procesos que ya estén en pie
-                como también poner a Santillana en una mejor posición al momento de adquirir
-                futuros contratos con desarrolladores de software. El resultado de esta propuesta
-                será el Manual de Políticas y Procesos al Escribir Código en el Desarrollo de
-                Software en acomodo para Santillana en su ambiente corporativo, histórico y
-                políticas existentes.
-            </p>
-            <p>
-                La forma general la cual este Manual es usado es uno el cual define en totalidad
-                el proceso de escritura de código en Santillana. Cada nuevo documento implementara
-                las prácticas descritas por este Manual estandarizadas para Santillana. El 
-                resultado de la implementación de las Políticas y Procesos al Escribir
-                Código en el Desarrollo de Software reduce efectivamente el tiempo de 
-                adaptación de un desarrollador como también mejora la comunicación entre 
-                desarrolladores en las siguientes áreas:
-            </p>
-            <ul>
-                <li>Documentación</li>
-                <li>Estructuración estándar</li>
-                <li>Legibilidad</li>
-                <li>Claridad</li>
-                <li>Planes de mejora</li>
-                <li>Resolución de problemas y bugs</li>
-            </ul>
-        </header>
-        <main>
-            <h1>MANUAL DE POLITICAS Y PROCESOS AL ESCRIBIR CODIGO EN EL DESARROLLO DE SOFTWARE</h1>
-            <h2>Introducción</h2>
-            <p>Este documento define los estándares de escritura de código en el desarrollo
-                de software.<br>El contenido y prácticas mencionadas en el manual están 
-                actualizadas hasta la fecha de 6 de octubre del 2015.</p>
-            <h2>Contenido</h2>
-            <ol>
-                <li></li>
-            </ol>
-            <h3>Sangría y espacios en blanco</h3>
-            <p>
-                Usa sangría de 4 espacios o tabulador. Las líneas no deben finalizar en espacio.
-                Todo documento debe terminar en línea nueva (\n) no en retorno (enter \r).
-                Todos los documentos de texto deben terminar en un solo new line (\n).</p>
-            <h3>Operadores</h3>
-            <p>
-                Todos los operadores binarios como +, -, =, !=, ==, >, etcétera llevaran un 
-                espacio antes y después del operador. Por ejemplo, foo = bar; en vez de 
-                <code>foo=bar;</code>.
-                Los operadores unarios no llevaran espacio entre el operador y la variable.
-                Por ejemplo, <code>++foo</code>.
-            </p>
-            <h3>Estructuras de control</h3>
-            <p>Deben tener un espacio entre la palabra clave de control y el paréntesis de
-                apertura. Usa llaves hasta en situaciones las cuales no sean técnicamente 
-                necesarias. La llave de apertura debe estar colocada en la misma 
-                línea de la declaración. La llave de cierre debe estar colocada con 
-                sangría al mismo nivel de la declaración de apertura.
-            </p>
-            <p>
-                Declaracion if:
-                <pre><code>
-                    if (foo == bar) {
-                        return;
-                    } else if (foo != bar) {
-                        return;
-                    } else {
-                        return;
-                    }
-                </code></pre>
-                Declaracion switch:
-                <code>
-                    Switch (foo) {
-                </code>
-            </p>
-        </main>
+        <div class="center-text">
+            <header>
+                <div class="align-left">
+                <h2>Descripción</h2>
+                <p>
+                    Como propósito en asistir a Santillana a mejorar o implementar el proceso de 
+                    estandarización de escritura de código al momento de desarrollar software.  
+                    El propósito de esta propuesta es para mejorar los procesos que ya estén en 
+                    pie como también poner a Santillana en una mejor posición al momento de adquirir 
+                    futuros contratos con desarrolladores de software.  El resultado de esta 
+                    propuesta será el Manual de Políticas y Procesos al Escribir Código en el 
+                    Desarrollo de Software en acomodo para Santillana en su ambiente corporativo, 
+                    histórico y políticas existentes.
+                </p>
+                <p>
+                    La forma general la cual este Manual es usado es uno el cual define en totalidad 
+                    el proceso de escritura de código en Santillana.  Cada nuevo documento 
+                    implementara las prácticas descritas por este Manual estandarizadas para 
+                    Santillana.  El resultado de la implementación de las Políticas y Procesos 
+                    al Escribir Código en el Desarrollo de Software reduce efectivamente el tiempo 
+                    de adaptación de un desarrollador como también mejora la comunicación entre 
+                    desarrolladores en las siguientes áreas:
+                </p>
+                <ul>
+                    <li>Documentación</li>
+                    <li>Estructuración estándar</li>
+                    <li>Legibilidad</li>
+                    <li>Claridad</li>
+                    <li>Planes de mejora</li>
+                    <li>Resolución de problemas y bugs</li>
+                </ul>
+                </div>
+            </header>
+            <main>
+                <div class="align-left">
+                <h1>MANUAL DE POLITICAS Y PROCESOS AL ESCRIBIR CODIGO EN EL DESARROLLO DE SOFTWARE</h1>
+                <h2>Introducción</h2>
+                <p>
+                    Este documento define los estándares de escritura de código en el desarrollo de 
+                    software.  El contenido en este manual está actualizado hasta la fecha del 6 de 
+                    octubre del 2015.  Las practicas de uso serán aplicadas al lenguaje en el cual 
+                    desarrolla independientemente del lenguaje que se detalle en los ejemplos.
+                </p>
+                <h2>Contenido</h2>
+                    <ul>
+                        <li><a href="#">Sangría y espacios en blanco</a></li>
+                        <li><a href="#">Operadores</a></li>
+                        <li><a href="#">Estructuras de control</a></li>
+                        <li><a href="#">Extensión de líneas</a></li>
+                        <li><a href="#">Llamada de funciones</a></li>
+                        <li><a href="#">Declaración de funciones</a></li>
+                        <li><a href="#">Constructores</a></li>
+                        <li><a href="#">Arreglos</a></li>
+                        <li><a href="#">Concatenaciones</a></li>
+                        <li><a href="#">Definición de variables</a></li>
+                        <li><a href="#">Documentación</a></li>
+                        <li><a href="#">Compiladores, minimizadores de código</a></li>
+                    </ul>
+                <h3>Sangría y espacios en blanco</h3>
+                <p>
+                    Usa sangría de 4 espacios o tabulador. Las líneas no deben finalizar en espacio.
+                    Todo documento debe terminar en línea nueva (\n) no en retorno (enter \r).
+                    Todos los documentos de texto deben terminar en un solo new line (\n).</p>
+                <h3>Operadores</h3>
+                <p>
+                    Todos los operadores binarios como +, -, =, !=, ==, >, etcétera llevaran un 
+                    espacio antes y después del operador. Por ejemplo, foo = bar; en vez de 
+                    <code>foo=bar;</code>.
+                    Los operadores unarios no llevaran espacio entre el operador y la variable.
+                    Por ejemplo, <code>++foo</code>.
+                </p>
+                <h3>Estructuras de control</h3>
+                <p>Deben tener un espacio entre la palabra clave de control y el paréntesis de
+                    apertura. Usa llaves hasta en situaciones las cuales no sean técnicamente 
+                    necesarias. La llave de apertura debe estar colocada en la misma 
+                    línea de la declaración. La llave de cierre debe estar colocada con 
+                    sangría al mismo nivel de la declaración de apertura.
+                </p>
+                <p>
+                    Declaracion if:
+                    <pre><code>
+                        if (foo == bar) {
+                            return;
+                        } else if (foo != bar) {
+                            return;
+                        } else {
+                            return;
+                        }
+                    </code></pre>
+                    Declaracion switch:
+                    <code>
+                        Switch (foo) {
+                    </code>
+                </p>
+                </div>
+            </main>
+        </div>
     </body>
 </html>
 
@@ -90,34 +153,7 @@
 
 
 
-Descripción
-Como propósito en asistir a Santillana a mejorar o implementar el proceso de estandarización de escritura de código al momento de desarrollar software.  El propósito de esta propuesta es para mejorar los procesos que ya estén en pie como también poner a Santillana en una mejor posición al momento de adquirir futuros contratos con desarrolladores de software.  El resultado de esta propuesta será el Manual de Políticas y Procesos al Escribir Código en el Desarrollo de Software en acomodo para Santillana en su ambiente corporativo, histórico y políticas existentes.
-La forma general la cual este Manual es usado es uno el cual define en totalidad el proceso de escritura de código en Santillana.  Cada nuevo documento implementara las prácticas descritas por este Manual estandarizadas para Santillana.  El resultado de la implementación de las Políticas y Procesos al Escribir Código en el Desarrollo de Software reduce efectivamente el tiempo de adaptación de un desarrollador como también mejora la comunicación entre desarrolladores en las siguientes áreas:
-•	Documentación
-•	Estructuración estándar
-•	Legibilidad
-•	Claridad
-•	Planes de mejora
-•	Resolución de problemas y bugs
- 
-MANUAL DE POLITICAS Y PROCESOS AL ESCRIBIR CODIGO EN EL DESARROLLO DE SOFTWARE
 
-Introducción
-Este documento define los estándares de escritura de código en el desarrollo de software.  El contenido en este manual está actualizado hasta la fecha del 6 de octubre del 2015.  Las practicas de uso serán aplicadas al lenguaje en el cual desarrolla independientemente del lenguaje que se detalle en los ejemplos.
-
-Contenido
-Sangría y espacios en blanco
-Operadores
-Estructuras de control
-Extensión de líneas
-Llamada de funciones
-Declaración de funciones
-Constructores
-Arreglos
-Concatenaciones
-Definición de variables
-Documentación
-Compiladores, minimizadores de código
 
  
 Sangría y espacios en blanco

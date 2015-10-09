@@ -9,9 +9,15 @@ function changeContactNumber() { // Previously Onload() now renamed to changeCon
     Xrm.Page.getAttribute("new_codigocontacto").setValue(a);
 }
 function oohlalah() {
+    /*
+     * Just a tesging function for onchange events
+     */
     alert("on change!");
 }
 function getAttributeObj(attribute) {
+    /*
+     * This function gets the atribute object determined by the argument
+     */
     return Xrm.Page.getAttribute(attribute);
 }
 function getSection(tab, section) { return Xrm.Page.ui.tabs.get(tab).sections.get(section); }

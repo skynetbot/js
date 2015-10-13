@@ -1,3 +1,41 @@
+
+function getAttributeObj(attribute) {
+    /*
+     * This function gets the atribute object determined by the argument
+     */
+    return Xrm.Page.getAttribute(attribute);
+}
+function enableField(field) {
+    $('#' + field + '_c').parent().show(); //show <tr> field with label/input
+    Xrm.Page.ui.controls.get(field).setDisabled(false);
+    Xrm.Page.ui.controls.get(field).setRequiredLevel("required"); //this field is a must
+}
+function disableField(field) {
+    $('#' + field + '_c').parent().hide(); //hide public options
+    Xrm.Page.ui.controls.get(field).setRequiredLevel("none");
+    Xrm.Page.ui.controls.get(field).setDisabled(true);
+}
+function showHidePublicSchoolCode() {
+    /*
+     * Shows or hides schoolcode field depending on subtype field
+     * if subtype is private hide schoolcode, if subtype is public
+     * show schoolcode, the default action is to hide the schoolcode field.
+     */
+    if (getAttributeObj('new_subtype').getValue() == 100000001) { // Public
+        enableField('new_schoolcode');
+    } else { //Private||Null  as default value if nothing is selected hide the field
+        disableField('new_schoolcode');
+    }
+}
+function showHideAgreementNumberExpiration() {
+    if (getAttributeObj('new_agreement').getValue() == 1) {
+        enableField('new_agreementexpirationdate');
+        enableField('new_contractid');
+    } else {
+        disableField('new_agreementexpirationdate');
+        disableField('new_contractid');
+    }
+}
 function schoolTypeStatus() { // Function to get school type value off of account entity
     // if the school type is public the form should include a school code field
     var schoolTextValue = Xrm.Page.data.entity.attributes.get("new_subtype").getText();

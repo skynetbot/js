@@ -252,3 +252,59 @@ clic en ' + obj.Name + ' (abajo).', 'ERROR');
             error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
         }); // END OF AJAX
 } // END OF getAccountDetails
+function getAccountObject() {
+    /* 
+     * Refer to Microsoft Dynamics CRM 2015 SDK:
+     * {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
+     * RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js
+     *
+     * This function returns an array consisting on the contact's parent
+     * account. For this an Ajax request needs to be called to return the
+     * JSON object.
+     */
+    var accountObject = getAttributeObj('parentcustomerid').getValue(), // getAttributeObj From contactFormScript.js
+        clientUrl = Xrm.Page.context.getClientUrl(), // get CRM URL This is the URL you find @ CRM Developer Settings
+        ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
+        odataSetName = "AccountSet", // You can find this after exporting the Default Solution
+        // Object Array for the JSON Call
+        objectArrayAccount = new Array();
+    /*
+     * First we verify that the contact have a parent account. If exists we get the account ID
+     * then we prevent sql injection.
+     */
+    if (!accountObject) {
+        Xrm.Page.ui.setFormNotification('Este contacto no tiene cuenta asignada. Este mensaje desaparecera al refrescar la p\u00E1gina despu\u00E9s de incluir y salvar toda la informaci\u00F3n requerida.', 'ERROR');
+        return;
+    } else {
+        var accountObjectId = accountObject[0].id; //get account id
+        accountObjectId = encodeURIComponent(accountObjectId);
+    }
+    // Verify odata set name then prevent sql injection
+    if (!odataSetName) {
+        Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve odataSetName.','ERROR');
+        return;
+    } else {
+        odataSetName = encodeURIComponent(odataSetName);
+    }
+    // account entity XML
+    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
+    // odataSelect would be the select query statement
+    // JQuery call
+        $.ajax({
+            type: "GET",
+            // HTTP GET request
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: odataSelect,
+            beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
+            success: function (data, textStatus, XmlHttpRequest) {
+                objectArrayAccount.push(data.d);
+                // var obj = JSON.parse(XmlHttpRequest.responseText).d;
+                // var obj = data.d;
+                //console.log(obj);
+            }, // SUCCESS BRACKET
+            error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
+        }); // END OF AJAX
+    // console.log(objectArrayAccount);
+    return objectArrayAccount;
+} // END OF getAccountObject

@@ -182,6 +182,7 @@ function getAccountDetails() {
 como p\u00FAblico o privado.  Favor de editar este campo para mostrar informaci\u00F3n pertinente al contacto. Para editar haga \
 clic en ' + obj.Name + ' (abajo).', 'ERROR');
                 } else {
+                    // console.log(getAccountObject[0]);
                     var schoolType = obj.new_SubType.Value;
                     // on account object account school type value hide or display related fields
                     switch (schoolType) {

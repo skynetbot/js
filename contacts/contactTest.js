@@ -1,14 +1,13 @@
 function returnArrayTest() {
-    /* Refer to Microsoft Dynamics CRM 2015 SDK:
-       {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
-       RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js
-       
-       This function will get the related account value from the contact form
-       and with this value creates a database request to pull a specific value
-       from the account entity (in this case if the account is from a 
-       public/private/else) then with the requested value from the account
-       displays certain fields and sets it's required permission in the current
-       contact form */
+    /* 
+     * Refer to Microsoft Dynamics CRM 2015 SDK:
+     * {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
+     * RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js
+     *
+     * This function returns an array consisting on the contact's parent
+     * account. For this an Ajax request needs to be called to return the
+     * JSON object.
+     */
     var accountObject = getAttributeObj('parentcustomerid').getValue(), // getAttributeObj From contactFormScript.js
         clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
         ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
@@ -41,16 +40,8 @@ function returnArrayTest() {
             success: function (data, textStatus, XmlHttpRequest) {
                 objArray.push(data.d);
                 // var obj = JSON.parse(XmlHttpRequest.responseText).d;
-                var obj = data.d;
-                //console.log(obj);
-                if (!obj.new_SubType.Value) {
-                    Xrm.Page.ui.setFormNotification('La cuenta de este contacto no tiene determinado el tipo de instituci\u00F3n \
-como p\u00FAblico o privado.  Favor de editar este campo para mostrar informaci\u00F3n pertinente al contacto. Para editar haga \
-clic en ' + obj.Name + ' (abajo).', 'ERROR');
-                } else {
-                } // ELSE BRACKET
             }, // SUCCESS BRACKET
             error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
         }); // END OF AJAX
-    console.log(objArray);
+    console.log(objArray[-1]);
 } // END OF getAccountDetails

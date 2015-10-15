@@ -58,6 +58,86 @@ function subjectsTaught() {
         }
     }
 }
+function schoolContactType(schooltype) {
+    var studentSection = getSection('student_tab', 'student_section'),
+        studentSection2 = getSection('student_tab', 'student_section2'),
+        studentSection3 = getSection('student_tab2', 'student_section3'),
+        teacherSection = getSection('teacher_tab', 'teacher_section'),
+        teacherSection2 = getSection('teacher_tab', 'teacher_section2'),
+        coachSection = getSection('coach_tab', 'coach_section'),
+        coachSection2 = getSection('coach_tab', 'coach_section2'),
+        hrSection = getSection('hr_tab', 'hr_section'),
+        hrSection2 = getSection('hr_tab', 'hr_section2');
+}
+function contactFormOnLoad() {
+    jsonObjectAccount(function (data, textStatus, XmlHttpRequest) {
+        var account = data.d;
+        if (!account.new_SubType.Value) {
+            Xrm.Page.ui.setFormNotification('La cuenta de este contacto no tiene determinado el tipo de instituci\u00F3n \
+como p\u00FAblico o privado.  Favor de editar este campo para mostrar informaci\u00F3n pertinente al contacto. Para editar haga \
+clic en ' + account.Name + ' (abajo).', 'ERROR');
+        } else {
+            // on account object account school type value hide or display related fields
+            if (account.new_SubType.Value == 100000000) { // Private if account is a private school
+                enableField('new_contacttypeprivate');
+                disableField('new_contacttypepublic');
+                if (getAttributeObj('new_contacttypeprivate').getValue() != null) {
+                }
+            } else if (account.new_SubType.Value == 100000001) { // Public if account is a public school
+            } else {
+                disableField('new_contacttypepublic');
+                disableField('new_contacttypeprivate');
+            }
+        }
+    }); // endOf jsonObjectAccount
+}
+function jsonObjectAccount(callback) {
+    /* 
+     * Refer to Microsoft Dynamics CRM 2015 SDK:
+     * {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
+     * RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js
+     *
+     * This function returns an array consisting on the contact's parent
+     * account. For this an Ajax request needs to be called to return the
+     * JSON object.
+     *
+     * To call this function, for example, the success callback you would do it like this:
+     * jsonObjectAccount(function (data, textStatus, XmlHttpRequest) { console.log(data.d); });
+     */
+    var accountObject = getAttributeObj('parentcustomerid').getValue(), // getAttributeObj From contactFormScript.js
+        clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
+        ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
+        odataSetName = "AccountSet"; //This is found when exporting
+    if (!accountObject) {
+        Xrm.Page.ui.setFormNotification('Este contacto no tiene cuenta asignada. Este mensaje desaparecera al refrescar la p\u00E1gina despu\u00E9s de incluir y salvar toda la informaci\u00F3n requerida.', 'ERROR');
+        return;
+    } else {
+        var accountObjectId = accountObject[0].id; //get account id
+        accountObjectId = encodeURIComponent(accountObjectId);
+    }
+    if (!odataSetName) {
+        Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve odataSetName.','ERROR');
+        return;
+    } else {
+        odataSetName = encodeURIComponent(odataSetName);
+    }
+    // account entity XML
+    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
+    // odataSelect would be the select query statement
+    $.ajax({
+        type: "GET",
+        // HTTP GET request
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: odataSelect,
+        beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
+        success: callback,
+        error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
+    }); // END OF AJAX
+} // END OF jsonObjectAccount
+function returnArrayTest() {
+    jsonObjectAccount(function (data, textStatus, XmlHttpRequest) { console.log(data.d.new_SubType.Value); });
+}
 function privateSchoolContactType() {
     var studentSection = getSection('student_tab', 'student_section'),
         studentSection2 = getSection('student_tab', 'student_section2'),
@@ -182,6 +262,7 @@ function getAccountDetails() {
 como p\u00FAblico o privado.  Favor de editar este campo para mostrar informaci\u00F3n pertinente al contacto. Para editar haga \
 clic en ' + obj.Name + ' (abajo).', 'ERROR');
                 } else {
+                    console.log(getAttributeObj('new_contacttypepublic').getValue());
                     // console.log(getAccountObject[0]);
                     var schoolType = obj.new_SubType.Value;
                     // on account object account school type value hide or display related fields
@@ -253,47 +334,3 @@ clic en ' + obj.Name + ' (abajo).', 'ERROR');
             error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
         }); // END OF AJAX
 } // END OF getAccountDetails
-function jsonObjectAccount(callback) {
-    /* 
-     * Refer to Microsoft Dynamics CRM 2015 SDK:
-     * {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
-     * RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js
-     *
-     * This function returns an array consisting on the contact's parent
-     * account. For this an Ajax request needs to be called to return the
-     * JSON object.
-     *
-     * To call this function, for example, the success callback you would do it like this:
-     * jsonObjectAccount(function (data, textStatus, XmlHttpRequest) { console.log(data.d); });
-     */
-    var accountObject = getAttributeObj('parentcustomerid').getValue(), // getAttributeObj From contactFormScript.js
-        clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
-        ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
-        odataSetName = "AccountSet"; //This is found when exporting
-    if (!accountObject) {
-        Xrm.Page.ui.setFormNotification('Este contacto no tiene cuenta asignada. Este mensaje desaparecera al refrescar la p\u00E1gina despu\u00E9s de incluir y salvar toda la informaci\u00F3n requerida.', 'ERROR');
-        return;
-    } else {
-        var accountObjectId = accountObject[0].id; //get account id
-        accountObjectId = encodeURIComponent(accountObjectId);
-    }
-    if (!odataSetName) {
-        Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve odataSetName.','ERROR');
-        return;
-    } else {
-        odataSetName = encodeURIComponent(odataSetName);
-    }
-    // account entity XML
-    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
-    // odataSelect would be the select query statement
-    $.ajax({
-        type: "GET",
-        // HTTP GET request
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        url: odataSelect,
-        beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
-        success: callback,
-        error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
-    }); // END OF AJAX
-} // END OF jsonObjectAccount

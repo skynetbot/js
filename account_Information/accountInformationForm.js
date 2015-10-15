@@ -76,8 +76,8 @@ function showHideReligiousDenomination() {
 function cityOptions() {
     var options = Xrm.Page.getAttribute('new_city').getOptions();
     for (var i in options) {
-        Xrm.Page.ui.setFormNotification('Value :' + options[i].value, 'ERROR');
-        Xrm.Page.ui.setFormNotification('Text :' + options[i].text, 'ERROR');
+        Xrm.Page.ui.setFormNotification('Value :' + options[i].value, 'INFORMATION');
+        Xrm.Page.ui.setFormNotification('Text :' + options[i].text, 'INFORMATION');
         
     }
 }

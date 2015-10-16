@@ -36,6 +36,9 @@ function sectionsHide() {
     var i;
     for (i = 0; i < arguments.length; i++)
         arguments[i].setVisible(false); }
+function setAttributeValue(attribute, value) {
+    Xrm.Page.data.entity.attributes.get(attribute).setValue(value);
+}
 function subjectsTaught() {
     var subjectsNumber = getAttributeObj('new_subjectstaught').getText() - 1,
         subjectsValue = getAttributeObj('new_subjectstaught').getValue(),
@@ -77,17 +80,26 @@ function contactFormOnLoad() {
 como p\u00FAblico o privado.  Favor de editar este campo para mostrar informaci\u00F3n pertinente al contacto. Para editar haga \
 clic en ' + account.Name + ' (abajo).', 'ERROR');
         } else {
+            console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' before any value');
+            // Save the Disabled Field
+            // Xrm.Page.data.entity.attributes.get("new_date1").setSubmitMode("always");
             // on account object account school type value hide or display related fields
-            if (account.new_SubType.Value == 100000000) { // Private if account is a private school
-                enableField('new_contacttypeprivate');
-                disableField('new_contacttypepublic');
-                if (getAttributeObj('new_contacttypeprivate').getValue() != null) {
-                }
-            } else if (account.new_SubType.Value == 100000001) { // Public if account is a public school
-            } else {
-                disableField('new_contacttypepublic');
-                disableField('new_contacttypeprivate');
-            }
+            //if (account.new_SubType.Value == 100000000) { // Private if account is a private school
+            //    console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' before setting private');
+            //    setAttributeValue('new_contactparentaccounttype', 315890000); // set new_contactparentaccounttype to private
+            //    console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' after setting private');
+            //    //enableField('new_contacttypeprivate');
+            //    //disableField('new_contacttypepublic');
+            //    if (getAttributeObj('new_contacttypeprivate').getValue() != null) {
+            //    }
+            //} else if (account.new_SubType.Value == 100000001) { // Public if account is a public school
+            //    console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' before setting public');
+            //    setAttributeValue('new_contactparentaccounttype', 315890001); // set new_contactparentaccounttype to public
+            //    console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' after setting public');
+            //} else {
+            //    disableField('new_contacttypepublic');
+            //    disableField('new_contacttypeprivate');
+            //}
         }
     }); // endOf jsonObjectAccount
 }

@@ -39,6 +39,12 @@ function sectionsHide() {
 function setAttributeValue(attribute, value) {
     Xrm.Page.data.entity.attributes.get(attribute).setValue(value);
 }
+function saveAttributeValue(attribute) {
+    Xrm.Page.data.entity.attributes.get(attribute).setSubmitMode('always');
+}
+function getAttributeSubmitMode(attribute) {
+    Xrm.Page.data.entity.attributes.get(attribute).getSubmitMode();
+}
 function subjectsTaught() {
     var subjectsNumber = getAttributeObj('new_subjectstaught').getText() - 1,
         subjectsValue = getAttributeObj('new_subjectstaught').getValue(),
@@ -61,7 +67,10 @@ function subjectsTaught() {
         }
     }
 }
-function schoolContactType(schooltype) {
+function schoolContactType(schooltype, contactTypeValue) {
+    /*
+     * Form sections
+     */
     var studentSection = getSection('student_tab', 'student_section'),
         studentSection2 = getSection('student_tab', 'student_section2'),
         studentSection3 = getSection('student_tab2', 'student_section3'),
@@ -71,6 +80,54 @@ function schoolContactType(schooltype) {
         coachSection2 = getSection('coach_tab', 'coach_section2'),
         hrSection = getSection('hr_tab', 'hr_section'),
         hrSection2 = getSection('hr_tab', 'hr_section2');
+    if (schooltype == 'private') {
+        switch (contactTypeValue) {
+            case 100000016: // Teacher
+                //If a teacher display teacher section, hide not relevant
+                sectionsHide(studentSection, studentSection2, studentSection3, coachSection, coachSection2, hrSection, hrSection2);
+                sectionShow(teacherSection);
+                sectionShow(teacherSection2);
+                enableField('new_subjectstaught');
+                break;
+            case 100000003: // Coach
+                // if a coach, show coach section, hide not relevant
+                sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, hrSection, hrSection2);
+                sectionShow(coachSection);
+                sectionShow(coachSection2);
+                break;
+            default:
+                sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, coachSection, coachSection2, hrSection, hrSection2);
+                break;
+        }
+    } else if (schooltype == 'public') {
+        switch (contactTypeValue) {
+            case 100000026: // Teacher
+                //If a teacher display teacher section, hide not relevant
+                sectionsHide(studentSection, studentSection2, studentSection3, coachSection, coachSection2, hrSection, hrSection2);
+                sectionShow(teacherSection);
+                sectionShow(teacherSection2);
+                enableField('new_subjectstaught');
+                break;
+            case 100000022: //Student
+                //If the contact type is a student, display the student section hide not relevant
+                sectionsHide(teacherSection, teacherSection2, coachSection, coachSection2, hrSection, hrSection2);
+                sectionShow(studentSection);
+                sectionShow(studentSection2);
+                sectionShow(studentSection3);
+                break;
+            case 100000004: // Coach
+                // if a coach, show coach section, hide not relevant
+                sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, hrSection, hrSection2);
+                sectionShow(coachSection);
+                sectionShow(coachSection2);
+                break;
+            default:
+                sectionsHide(studentSection, studentSection2, studentSection3, teacherSection, teacherSection2, coachSection, coachSection2, hrSection, hrSection2);
+                break;
+        }
+    } else {
+        
+    }
 }
 function contactFormOnLoad() {
     jsonObjectAccount(function (data, textStatus, XmlHttpRequest) {
@@ -80,26 +137,44 @@ function contactFormOnLoad() {
 como p\u00FAblico o privado.  Favor de editar este campo para mostrar informaci\u00F3n pertinente al contacto. Para editar haga \
 clic en ' + account.Name + ' (abajo).', 'ERROR');
         } else {
+            var accountTypeValue = account.new_SubType.Value,
+                contactAccountTypeValue;
+            if (accountTypeValue == 100000000) { // Private if account is a private school
+                contactAccountTypeValue = 315890000; // Private
+            } else if (accountTypeValue == 100000001) { // Public
+                contactAccountTypeValue = 315890001; // Public
+            }
             console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' before any value');
+            if (!getAttributeObj('new_contactparentaccounttype').getValue()) {
+                //Xrm.Page.ui.controls.get('new_contactparentaccounttype').setDisabled(false);
+                setAttributeValue('new_contactparentaccounttype', contactAccountTypeValue); // set new_contactparentaccounttype value
+                //console.log(Xrm.Page.data.entity.attributes.get('new_contactparentaccounttype').getSubmitMode());
+                //console.log(Xrm.Page.data.entity.attributes.get('new_contacttypepublic').getSubmitMode());
+                saveAttributeValue('new_contactparentaccounttype');
+                //Xrm.Page.data.entity.save();
+            }
+            console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' after setting value');
             // Save the Disabled Field
             // Xrm.Page.data.entity.attributes.get("new_date1").setSubmitMode("always");
             // on account object account school type value hide or display related fields
-            //if (account.new_SubType.Value == 100000000) { // Private if account is a private school
-            //    console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' before setting private');
-            //    setAttributeValue('new_contactparentaccounttype', 315890000); // set new_contactparentaccounttype to private
-            //    console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' after setting private');
-            //    //enableField('new_contacttypeprivate');
-            //    //disableField('new_contacttypepublic');
+            if (getAttributeObj('new_contactparentaccounttype').getValue() == 315890000) { // Private if account is a private school
+                enableField('new_contacttypeprivate');
+                disableField('new_contacttypepublic');
+                saveAttributeValue('new_contactparentaccounttype');
+                console.log(getAttributeObj('new_contacttypeprivate').getValue());
+                schoolContactType('private', getAttributeObj('new_contacttypeprivate').getValue());
+            } else if (getAttributeObj('new_contactparentaccounttype').getValue() == 315890001) { // Public if account is a public school
+                enableField('new_contacttypepublic');
+                disableField('new_contacttypeprivate');
+                saveAttributeValue('new_contactparentaccounttype');
+                console.log(getAttributeObj('new_contacttypepublic').getValue());
+                schoolContactType('public', getAttributeObj('new_contacttypeprivate').getValue());
+            } else {
+                disableField('new_contacttypepublic');
+                disableField('new_contacttypeprivate');
+            }
             //    if (getAttributeObj('new_contacttypeprivate').getValue() != null) {
             //    }
-            //} else if (account.new_SubType.Value == 100000001) { // Public if account is a public school
-            //    console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' before setting public');
-            //    setAttributeValue('new_contactparentaccounttype', 315890001); // set new_contactparentaccounttype to public
-            //    console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' after setting public');
-            //} else {
-            //    disableField('new_contacttypepublic');
-            //    disableField('new_contacttypeprivate');
-            //}
         }
     }); // endOf jsonObjectAccount
 }

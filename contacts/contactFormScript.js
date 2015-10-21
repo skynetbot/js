@@ -53,11 +53,11 @@ function subjectsTaught() {
         for (i = 0; i <= 7; i++) {
             if (i <= subjectsNumber) {
                 enableField('new_subject'+i);
-                //Xrm.Page.ui.setFormNotification('Milton: enabled subject'+ i, 'INFORMATION');
+                //Xrm.Page.ui.setFormNotification('Milton: enabled subject'+ i, 'INFO');
             } else {
                 getAttributeObj('new_subject'+i).setValue(null);
                 disableField('new_subject'+i);
-                //Xrm.Page.ui.setFormNotification('Milton: disabled subject'+ i, 'INFORMATION');
+                //Xrm.Page.ui.setFormNotification('Milton: disabled subject'+ i, 'INFO');
             }
         }
     } else {
@@ -71,15 +71,15 @@ function schoolContactType(schooltype, contactTypeValue) {
     /*
      * Form sections
      */
-    var studentSection = getSection('student_tab', 'student_section'),
+    var studentSection  = getSection('student_tab', 'student_section'),
         studentSection2 = getSection('student_tab', 'student_section2'),
         studentSection3 = getSection('student_tab2', 'student_section3'),
-        teacherSection = getSection('teacher_tab', 'teacher_section'),
+        teacherSection  = getSection('teacher_tab', 'teacher_section'),
         teacherSection2 = getSection('teacher_tab', 'teacher_section2'),
-        coachSection = getSection('coach_tab', 'coach_section'),
-        coachSection2 = getSection('coach_tab', 'coach_section2'),
-        hrSection = getSection('hr_tab', 'hr_section'),
-        hrSection2 = getSection('hr_tab', 'hr_section2');
+        coachSection    = getSection('coach_tab', 'coach_section'),
+        coachSection2   = getSection('coach_tab', 'coach_section2'),
+        hrSection       = getSection('hr_tab', 'hr_section'),
+        hrSection2      = getSection('hr_tab', 'hr_section2');
     if (schooltype == 'private') {
         switch (contactTypeValue) {
             case 100000016: // Teacher
@@ -88,6 +88,7 @@ function schoolContactType(schooltype, contactTypeValue) {
                 sectionShow(teacherSection);
                 sectionShow(teacherSection2);
                 enableField('new_subjectstaught');
+                subjectsTaught();
                 break;
             case 100000003: // Coach
                 // if a coach, show coach section, hide not relevant
@@ -107,6 +108,7 @@ function schoolContactType(schooltype, contactTypeValue) {
                 sectionShow(teacherSection);
                 sectionShow(teacherSection2);
                 enableField('new_subjectstaught');
+                subjectsTaught();
                 break;
             case 100000022: //Student
                 //If the contact type is a student, display the student section hide not relevant
@@ -128,102 +130,6 @@ function schoolContactType(schooltype, contactTypeValue) {
     } else {
         
     }
-}
-function contactFormOnLoad() {
-    jsonObjectAccount(function (data, textStatus, XmlHttpRequest) {
-        var account = data.d;
-        if (!account.new_SubType.Value) {
-            Xrm.Page.ui.setFormNotification('La cuenta de este contacto no tiene determinado el tipo de instituci\u00F3n \
-como p\u00FAblico o privado.  Favor de editar este campo para mostrar informaci\u00F3n pertinente al contacto. Para editar haga \
-clic en ' + account.Name + ' (abajo).', 'ERROR');
-        } else {
-            var accountTypeValue = account.new_SubType.Value,
-                contactAccountTypeValue;
-            if (accountTypeValue == 100000000) { // Private if account is a private school
-                contactAccountTypeValue = 315890000; // Private
-            } else if (accountTypeValue == 100000001) { // Public
-                contactAccountTypeValue = 315890001; // Public
-            }
-            console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' before any value');
-            if (!getAttributeObj('new_contactparentaccounttype').getValue()) {
-                //Xrm.Page.ui.controls.get('new_contactparentaccounttype').setDisabled(false);
-                setAttributeValue('new_contactparentaccounttype', contactAccountTypeValue); // set new_contactparentaccounttype value
-                //console.log(Xrm.Page.data.entity.attributes.get('new_contactparentaccounttype').getSubmitMode());
-                //console.log(Xrm.Page.data.entity.attributes.get('new_contacttypepublic').getSubmitMode());
-                saveAttributeValue('new_contactparentaccounttype');
-                //Xrm.Page.data.entity.save();
-            }
-            console.log(getAttributeObj('new_contactparentaccounttype').getValue() + ' after setting value');
-            // Save the Disabled Field
-            // Xrm.Page.data.entity.attributes.get("new_date1").setSubmitMode("always");
-            // on account object account school type value hide or display related fields
-            if (getAttributeObj('new_contactparentaccounttype').getValue() == 315890000) { // Private if account is a private school
-                enableField('new_contacttypeprivate');
-                disableField('new_contacttypepublic');
-                saveAttributeValue('new_contactparentaccounttype');
-                console.log(getAttributeObj('new_contacttypeprivate').getValue());
-                schoolContactType('private', getAttributeObj('new_contacttypeprivate').getValue());
-            } else if (getAttributeObj('new_contactparentaccounttype').getValue() == 315890001) { // Public if account is a public school
-                enableField('new_contacttypepublic');
-                disableField('new_contacttypeprivate');
-                saveAttributeValue('new_contactparentaccounttype');
-                console.log(getAttributeObj('new_contacttypepublic').getValue());
-                schoolContactType('public', getAttributeObj('new_contacttypeprivate').getValue());
-            } else {
-                disableField('new_contacttypepublic');
-                disableField('new_contacttypeprivate');
-            }
-            //    if (getAttributeObj('new_contacttypeprivate').getValue() != null) {
-            //    }
-        }
-    }); // endOf jsonObjectAccount
-}
-function jsonObjectAccount(callback) {
-    /* 
-     * Refer to Microsoft Dynamics CRM 2015 SDK:
-     * {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
-     * RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js
-     *
-     * This function returns an array consisting on the contact's parent
-     * account. For this an Ajax request needs to be called to return the
-     * JSON object.
-     *
-     * To call this function, for example, the success callback you would do it like this:
-     * jsonObjectAccount(function (data, textStatus, XmlHttpRequest) { console.log(data.d); });
-     */
-    var accountObject = getAttributeObj('parentcustomerid').getValue(), // getAttributeObj From contactFormScript.js
-        clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
-        ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
-        odataSetName = "AccountSet"; //This is found when exporting
-    if (!accountObject) {
-        Xrm.Page.ui.setFormNotification('Este contacto no tiene cuenta asignada. Este mensaje desaparecera al refrescar la p\u00E1gina despu\u00E9s de incluir y salvar toda la informaci\u00F3n requerida.', 'ERROR');
-        return;
-    } else {
-        var accountObjectId = accountObject[0].id; //get account id
-        accountObjectId = encodeURIComponent(accountObjectId);
-    }
-    if (!odataSetName) {
-        Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve odataSetName.','ERROR');
-        return;
-    } else {
-        odataSetName = encodeURIComponent(odataSetName);
-    }
-    // account entity XML
-    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
-    // odataSelect would be the select query statement
-    $.ajax({
-        type: "GET",
-        // HTTP GET request
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        url: odataSelect,
-        beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
-        success: callback,
-        error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
-    }); // END OF AJAX
-} // END OF jsonObjectAccount
-function returnArrayTest() {
-    jsonObjectAccount(function (data, textStatus, XmlHttpRequest) { console.log(data.d.new_SubType.Value); });
 }
 function privateSchoolContactType() {
     var studentSection = getSection('student_tab', 'student_section'),
@@ -292,6 +198,126 @@ function publicSchoolContactType() {
             break;
     }
 }
+function contactFormOnLoad() {
+    /*
+     * Calling the account JSON object on load
+     */
+    jsonObjectAccount(function (data, textStatus, XmlHttpRequest) {
+        var account = data.d;
+        /*
+         * Looks for the account type if its a (private|public) school
+         * If there is no value display a message
+         * otherwise gets the account type and depending on it's value shows|hides specific areas and fields
+         * pertinent to the record type.
+         */
+        if (!account.new_SubType.Value) {
+            Xrm.Page.ui.setFormNotification('La cuenta de este contacto no tiene determinado el tipo de instituci\u00F3n \
+como p\u00FAblico o privado.  Favor de editar este campo para mostrar informaci\u00F3n pertinente al contacto. Para editar haga \
+clic en ' + account.Name + ' (abajo).', 'ERROR');
+        } else {
+            var accountTypeValue = account.new_SubType.Value,
+                contactAccountTypeValue;
+            /*
+             * Tests the account type and assigns the object value to a variable
+             */
+            if (accountTypeValue == 100000000) { // Private if account is a private school
+                contactAccountTypeValue = 315890000; // Private
+            } else if (accountTypeValue == 100000001) { // Public
+                contactAccountTypeValue = 315890001; // Public
+            }
+            /*
+             * If there is no value for the contact type field assigns the value to it from the account type field
+             */
+            if (!getAttributeObj('new_contactparentaccounttype').getValue()) {
+                //Xrm.Page.ui.controls.get('new_contactparentaccounttype').setDisabled(false);
+                setAttributeValue('new_contactparentaccounttype', contactAccountTypeValue); // set new_contactparentaccounttype value
+                /*
+                 * to test the submit mode (should be dirty)
+                 * console.log(Xrm.Page.data.entity.attributes.get('new_contactparentaccounttype').getSubmitMode());
+                 */
+                // Force submit of a field
+                saveAttributeValue('new_contactparentaccounttype');
+                /*
+                 * To save the page
+                 * Xrm.Page.data.entity.save();
+                 */
+            }
+            /*
+             * Tests the previously assigned value to contact type then enables and disables it's related|unrelated fields|sections
+             */
+            if (getAttributeObj('new_contactparentaccounttype').getValue() == 315890000) { // Private if account is a private school
+                enableField('new_contacttypeprivate');
+                disableField('new_contacttypepublic');
+                saveAttributeValue('new_contactparentaccounttype');
+                var contacttypeprivate = getAttributeObj('new_contacttypeprivate').getValue();
+                schoolContactType('private', contacttypeprivate);
+            } else if (getAttributeObj('new_contactparentaccounttype').getValue() == 315890001) { // Public if account is a public school
+                enableField('new_contacttypepublic');
+                disableField('new_contacttypeprivate');
+                saveAttributeValue('new_contactparentaccounttype');
+                var contacttypepublic = getAttributeObj('new_contacttypepublic').getValue();
+                schoolContactType('public', contacttypepublic);
+            } else {
+                disableField('new_contacttypepublic');
+                disableField('new_contacttypeprivate');
+            }
+            //    if (getAttributeObj('new_contacttypeprivate').getValue() != null) {
+            //    }
+        }
+    }); // endOf jsonObjectAccount
+}
+function jsonObjectAccount(callback) {
+    /* 
+     * Refer to Microsoft Dynamics CRM 2015 SDK:
+     * {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\
+     * RESTJQueryContactEditor\Scripts\RESTJQueryContactEditor.js
+     *
+     * This function returns an array consisting on the contact's parent
+     * account. For this an Ajax request needs to be called to return the
+     * JSON object.
+     *
+     * To call this function, for example, the success callback you would do it like this:
+     * jsonObjectAccount(function (data, textStatus, XmlHttpRequest) { console.log(data.d); });
+     */
+    var accountObject = getAttributeObj('parentcustomerid').getValue(), // getAttributeObj From contactFormScript.js
+        clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
+        ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
+        odataSetName = "AccountSet"; //This is found when exporting
+    if (!accountObject) {
+        Xrm.Page.ui.setFormNotification('Este contacto no tiene cuenta asignada. Este mensaje desaparecera al refrescar la p\u00E1gina despu\u00E9s de incluir y salvar toda la informaci\u00F3n requerida.', 'ERROR');
+        return;
+    } else {
+        var accountObjectId = accountObject[0].id; //get account id
+        accountObjectId = encodeURIComponent(accountObjectId);
+    }
+    if (!odataSetName) {
+        Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve odataSetName.','ERROR');
+        return;
+    } else {
+        odataSetName = encodeURIComponent(odataSetName);
+    }
+    // account entity XML
+    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
+    // odataSelect would be the select query statement
+    $.ajax({
+        type: "GET",
+        // HTTP GET request
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: odataSelect,
+        beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
+        success: callback,
+        error: function (XmlHttpRequest, textStatus, errorThrown) { alert('OData Select Failed: ' + odataSelect); }
+    }); // END OF AJAX
+} // END OF jsonObjectAccount
+/*
+ * To call an asynchronous AJAX
+ * This is the method used to call the JSON object
+ * The nature of AJAX is always async *setting it as syncrhronous will cause the website to freeze*
+ * function returnArrayTest() {
+ *     jsonObjectAccount(function (data, textStatus, XmlHttpRequest) { console.log(data.d); });
+ * }
+ */
 function getAccountDetails() {
     /* Refer to Microsoft Dynamics CRM 2015 SDK:
        {$SDK_Directory}\SampleCode\JS\RESTEndpoint\RESTJQueryContactEditor\

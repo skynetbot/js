@@ -282,7 +282,7 @@ function jsonObjectAccount(callback) {
     var accountObject = getAttributeObj('parentcustomerid').getValue(), // getAttributeObj From contactFormScript.js
         clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
         ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
-        odataSetName = "AccountSet"; //This is found when exporting
+        odataSetName = "AccountSet"; // Entity in OData Endpoint Settings -> Customization -> Developer
     if (!accountObject) {
         Xrm.Page.ui.setFormNotification('Este contacto no tiene cuenta asignada. Este mensaje desaparecera al refrescar la p\u00E1gina despu\u00E9s de incluir y salvar toda la informaci\u00F3n requerida.', 'ERROR');
         return;

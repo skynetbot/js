@@ -1,3 +1,15 @@
+function saveAttributeValue(attribute) {
+    Xrm.Page.data.entity.attributes.get(attribute).setSubmitMode('always');
+}
+function setAttributeValue(attribute, value) {
+    Xrm.Page.data.entity.attributes.get(attribute).setValue(value);
+}
+function getAttributeObj(attribute) {
+    /*
+     * This function gets the atribute object determined by the argument
+     */
+    return Xrm.Page.getAttribute(attribute);
+}
 function valuationFormOnLoad() {
     /*
      * Calling the account JSON object on load

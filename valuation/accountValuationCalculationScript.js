@@ -409,6 +409,9 @@ function valuationFormOnLoad() {
      */
     jsonObjectEnrollments(function (data, textStatus, XmlHttpRequest) {
         var account = data.d;
+        console.log(account);
+        console.log(account.new_account_new_enrollmentadoptions_AccountName);
+        console.log(account.new_new_enrollmentadoptions_account);
         /*
          * Looks for the account type if its a (private|public) school
          * If there is no value display a message
@@ -436,16 +439,15 @@ function jsonObjectEnrollments(callback) {
      * To call this function, for example, the success callback you would do it like this:
      * jsonObjectEnrollments(function (data, textStatus, XmlHttpRequest) { console.log(data.d); });
      */
-    var accountObject = getAttributeObj('parentcustomerid').getValue(), // getAttributeObj From contactFormScript.js
+    var entityId = Xrm.Page.data.entity.getId(),
         clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
         ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
-        odataSetName = "new_enrollmentadoptionSet"; // Entity in OData Endpoint Settings -> Customization -> Developer
-    if (!accountObject) {
-        Xrm.Page.ui.setFormNotification('Este contacto no tiene cuenta asignada. Este mensaje desaparecera al refrescar la p\u00E1gina despu\u00E9s de incluir y salvar toda la informaci\u00F3n requerida.', 'ERROR');
+        odataSetName = "AccountSet"; // Entity in OData Endpoint Settings -> Customization -> Developer
+    if (!entityId) {
+        // Xrm.Page.ui.setFormNotification('r toda la informaci\u00F3n requerida.', 'ERROR');
         return;
     } else {
-        var accountObjectId = accountObject[0].id; //get account id
-        accountObjectId = encodeURIComponent(accountObjectId);
+        entityId = encodeURIComponent(entityId);
     }
     if (!odataSetName) {
         Xrm.Page.ui.setFormNotification('Developer: Error, could not retrieve odataSetName.','ERROR');
@@ -454,7 +456,8 @@ function jsonObjectEnrollments(callback) {
         odataSetName = encodeURIComponent(odataSetName);
     }
     // account entity XML
-    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + accountObjectId + "')";
+    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + entityId + "')";
+    console.log(odataSelect);
     // odataSelect would be the select query statement
     $.ajax({
         type: "GET",

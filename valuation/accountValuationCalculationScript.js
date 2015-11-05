@@ -404,14 +404,34 @@ function getAttributeObj(attribute) {
     return Xrm.Page.getAttribute(attribute);
 }
 function valuationFormOnLoad() {
+    var periodo = Xrm.Page.getAttribute("new_cambioperiodo").getValue();
+    console.log(periodo);
+    var accountId = Xrm.Page.data.entity.getId();
+    console.log(accountId);
+    var fetchXml = "<fetch mapping='logical'>" + "<entity name='new_enrollmentadoptions'>" +
+        "<all-attributes/>" + "<filter>" + "<condition attribute='new_accountname' operator='eq' value='" +
+        accountId + "' />" + "<condition attribute='new_project' operator='eq' value='" + periodo +
+        "' />" + "</filter>" + "</entity>" + "</fetch>";
+    console.log(fetchXml);
     /*
      * Calling the account JSON object on load
      */
     jsonObjectEnrollments(function (data, textStatus, XmlHttpRequest) {
         var account = data.d;
-        console.log(account);
-        console.log(account.new_account_new_enrollmentadoptions_AccountName);
-        console.log(account.new_new_enrollmentadoptions_account);
+        //console.log(account);
+        //console.log(account.results[0].new_AccountName.Name);
+        console.log(Xrm.Page.data.entity.getId());
+        for (var i in account.results) {
+            console.log(i);
+            console.log(account.results[i].new_AccountName.Id);
+            console.log(account.results[i].new_AccountName.Name);
+        }
+        /*for (var i in account.results) {
+            if (account.results[i].new_AccountName.Id == Xrm.Page.data.entity.getId()) {
+                console.log(account.results[i].new_AccountName.Name);
+            }
+        }*/
+        //for (var i in account.results) { console.log(account.results[i]); }
         /*
          * Looks for the account type if its a (private|public) school
          * If there is no value display a message
@@ -442,7 +462,7 @@ function jsonObjectEnrollments(callback) {
     var entityId = Xrm.Page.data.entity.getId(),
         clientUrl = Xrm.Page.context.getClientUrl(), //get CRM URL
         ODATA_ENDPOINT = "/XRMServices/2011/OrganizationData.svc", //Xrm OData end-point
-        odataSetName = "AccountSet"; // Entity in OData Endpoint Settings -> Customization -> Developer
+        odataSetName = "new_enrollmentadoptionsSet"; // Entity in OData Endpoint Settings -> Customization -> Developer
     if (!entityId) {
         // Xrm.Page.ui.setFormNotification('r toda la informaci\u00F3n requerida.', 'ERROR');
         return;
@@ -456,7 +476,8 @@ function jsonObjectEnrollments(callback) {
         odataSetName = encodeURIComponent(odataSetName);
     }
     // account entity XML
-    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + entityId + "')";
+    //var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName + "(guid'" + entityId + "')";
+    var odataSelect = clientUrl + ODATA_ENDPOINT + "/" + odataSetName;
     console.log(odataSelect);
     // odataSelect would be the select query statement
     $.ajax({
